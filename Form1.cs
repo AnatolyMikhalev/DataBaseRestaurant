@@ -60,6 +60,7 @@ namespace Restaurant
             SqlDataReader dataReader = null;
 
             try
+
             {
                 SqlCommand sqlCommand = new SqlCommand("SELECT Id, Lastname, FirstName, BirthDate, Address, Phone, Post FROM Employees",
                     sqlConnection);
