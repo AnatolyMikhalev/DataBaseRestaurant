@@ -36,6 +36,7 @@ namespace Restaurant
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageEmployees = new System.Windows.Forms.TabPage();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tabPageAutorizaion = new System.Windows.Forms.TabPage();
@@ -46,22 +47,25 @@ namespace Restaurant
             this.logintextbox = new System.Windows.Forms.TextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageAddOrder = new System.Windows.Forms.TabPage();
+            this.dataGridView3 = new System.Windows.Forms.DataGridView();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.tabPageOrders.SuspendLayout();
             this.tabPageEmployees.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPageAutorizaion.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPageAddOrder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.menuStrip2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPageOrders
@@ -69,7 +73,7 @@ namespace Restaurant
             this.tabPageOrders.Controls.Add(this.listView2);
             this.tabPageOrders.Location = new System.Drawing.Point(4, 22);
             this.tabPageOrders.Name = "tabPageOrders";
-            this.tabPageOrders.Size = new System.Drawing.Size(792, 382);
+            this.tabPageOrders.Size = new System.Drawing.Size(792, 410);
             this.tabPageOrders.TabIndex = 3;
             this.tabPageOrders.Text = "Заказы";
             this.tabPageOrders.UseVisualStyleBackColor = true;
@@ -85,7 +89,7 @@ namespace Restaurant
             this.listView2.HideSelection = false;
             this.listView2.Location = new System.Drawing.Point(0, 0);
             this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(792, 382);
+            this.listView2.Size = new System.Drawing.Size(792, 410);
             this.listView2.TabIndex = 1;
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
@@ -109,10 +113,26 @@ namespace Restaurant
             this.tabPageEmployees.Controls.Add(this.dataGridView1);
             this.tabPageEmployees.Location = new System.Drawing.Point(4, 22);
             this.tabPageEmployees.Name = "tabPageEmployees";
-            this.tabPageEmployees.Size = new System.Drawing.Size(792, 382);
+            this.tabPageEmployees.Size = new System.Drawing.Size(792, 410);
             this.tabPageEmployees.TabIndex = 2;
             this.tabPageEmployees.Text = "Сотрудники";
             this.tabPageEmployees.UseVisualStyleBackColor = true;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Id",
+            "LastName",
+            "FirstName",
+            "BirthDate",
+            "Address",
+            "Phone",
+            "Post"});
+            this.comboBox1.Location = new System.Drawing.Point(9, 330);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 6;
             // 
             // textBox1
             // 
@@ -146,7 +166,7 @@ namespace Restaurant
             this.tabPageAutorizaion.Location = new System.Drawing.Point(4, 22);
             this.tabPageAutorizaion.Name = "tabPageAutorizaion";
             this.tabPageAutorizaion.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAutorizaion.Size = new System.Drawing.Size(792, 382);
+            this.tabPageAutorizaion.Size = new System.Drawing.Size(792, 410);
             this.tabPageAutorizaion.TabIndex = 0;
             this.tabPageAutorizaion.Text = "Авторизация";
             // 
@@ -198,21 +218,61 @@ namespace Restaurant
             this.tabControl.Controls.Add(this.tabPageEmployees);
             this.tabControl.Controls.Add(this.tabPageOrders);
             this.tabControl.Controls.Add(this.tabPageAddOrder);
-            this.tabControl.Location = new System.Drawing.Point(0, 52);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(0, 24);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(800, 408);
+            this.tabControl.Size = new System.Drawing.Size(800, 436);
             this.tabControl.TabIndex = 0;
             // 
             // tabPageAddOrder
             // 
+            this.tabPageAddOrder.Controls.Add(this.dataGridView3);
+            this.tabPageAddOrder.Controls.Add(this.label3);
+            this.tabPageAddOrder.Controls.Add(this.textBox2);
             this.tabPageAddOrder.Controls.Add(this.dataGridView2);
             this.tabPageAddOrder.Location = new System.Drawing.Point(4, 22);
             this.tabPageAddOrder.Name = "tabPageAddOrder";
-            this.tabPageAddOrder.Size = new System.Drawing.Size(792, 382);
+            this.tabPageAddOrder.Size = new System.Drawing.Size(792, 410);
             this.tabPageAddOrder.TabIndex = 4;
             this.tabPageAddOrder.Text = "Добавить заказ";
             this.tabPageAddOrder.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView3
+            // 
+            this.dataGridView3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView3.Location = new System.Drawing.Point(377, 70);
+            this.dataGridView3.Name = "dataGridView3";
+            this.dataGridView3.Size = new System.Drawing.Size(409, 201);
+            this.dataGridView3.TabIndex = 9;
+            this.dataGridView3.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(377, 10);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(42, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Поиск:";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(425, 7);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(100, 20);
+            this.textBox2.TabIndex = 7;
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.Size = new System.Drawing.Size(371, 402);
+            this.dataGridView2.TabIndex = 0;
+            this.dataGridView2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
             // 
             // menuStrip2
             // 
@@ -240,11 +300,13 @@ namespace Restaurant
             // 
             // toolStrip1
             // 
+            this.toolStrip1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Location = new System.Drawing.Point(56, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(800, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(77, 25);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -257,30 +319,6 @@ namespace Restaurant
             this.toolStripButton1.Size = new System.Drawing.Size(65, 22);
             this.toolStripButton1.Text = "Обновить";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Id",
-            "LastName",
-            "FirstName",
-            "BirthDate",
-            "Address",
-            "Phone",
-            "Post"});
-            this.comboBox1.Location = new System.Drawing.Point(9, 330);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 6;
-            // 
-            // dataGridView2
-            // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(9, 4);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(298, 370);
-            this.dataGridView2.TabIndex = 0;
             // 
             // Restaurant
             // 
@@ -301,11 +339,13 @@ namespace Restaurant
             this.tabPageAutorizaion.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tabPageAddOrder.ResumeLayout(false);
+            this.tabPageAddOrder.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -336,6 +376,9 @@ namespace Restaurant
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.DataGridView dataGridView3;
     }
 }
 
