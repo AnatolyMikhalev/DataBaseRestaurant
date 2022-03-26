@@ -16,6 +16,7 @@ namespace Restaurant
     public partial class Restaurant : Form
     {
         private Employees employees = null;
+        private CreateOrder createOrder = null;
 
 
 
@@ -75,7 +76,7 @@ namespace Restaurant
         {
             try
             {
-                employees.dataGridView1_CellContentClick(e, newRowAdding);
+                employees.dataGridView1_CellContentClick(e);
                 employees.ReloadDataEmployees();
             }
             catch (Exception ex)
@@ -164,7 +165,7 @@ namespace Restaurant
                     }
                 }
 
-                //задаём table как datadourse of datagridvieworder
+                //задаём table как datasourse of datagridvieworder
 
 
                // dataTableGridViewOrder.Rows.Add(row);
@@ -190,19 +191,21 @@ namespace Restaurant
         {
             try
             {
-                if (newRowAdding == false)
-                {
-                    int rowIndex = dataGridView1.SelectedCells[0].RowIndex;
+                employees.CellValueChanged();
 
-                    DataGridViewRow editingRow = dataGridView1.Rows[rowIndex];
+                //if (newRowAdding == false)
+                //{
+                //    int rowIndex = dataGridView1.SelectedCells[0].RowIndex;
 
-                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+                //    DataGridViewRow editingRow = dataGridView1.Rows[rowIndex];
 
-                    dataGridView1[7, rowIndex] = linkCell;
+                //    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
 
-                    editingRow.Cells["Command"].Value = "Update";
+                //    dataGridView1[7, rowIndex] = linkCell;
 
-                }
+                //    editingRow.Cells["Command"].Value = "Update";
+
+                //}
             }
             catch (Exception ex)
             {
@@ -310,6 +313,7 @@ namespace Restaurant
             //DataBase.sqlConnection = new DataBase.sqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDB"].ConnectionString);
 
             employees = new Employees();
+            createOrder = new CreateOrder();
 
             if (DataBase.sqlConnection.State == System.Data.ConnectionState.Closed)
             {

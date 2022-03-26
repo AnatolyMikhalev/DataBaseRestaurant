@@ -7,9 +7,10 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
+
 namespace Restaurant
 {
-    class Employees : DataBase
+    class CreateOrder : DataBase
     {
         static public SqlCommandBuilder sqlBuilder = null;
 
@@ -19,7 +20,7 @@ namespace Restaurant
 
         public bool newRowAdding;
 
-        public void LoadDataEmployees(ref DataGridView dataGridView1, ref bool newRowAdding)
+        public void LoadDataOrders(ref DataGridView dataGridView1, ref bool newRowAdding)
         {
             try
             {
@@ -170,7 +171,7 @@ namespace Restaurant
         public void UserAddedRow()
         {
             if (newRowAdding == false)
-            { 
+            {
                 newRowAdding = true;
 
                 int lastRow = dataGridView.Rows.Count - 2;
@@ -181,7 +182,7 @@ namespace Restaurant
 
                 dataGridView[7, lastRow] = linkCell;
 
-                row.Cells["Command"].Value = "Insert"; 
+                row.Cells["Command"].Value = "Insert";
             }
         }
         public void CellValueChanged()
