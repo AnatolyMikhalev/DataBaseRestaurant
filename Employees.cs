@@ -139,5 +139,32 @@ namespace Restaurant
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        public void SearchEmployee(String Text, int Index)
+        {
+            switch (Index)
+            {
+                case 0:
+                    (dataGridView.DataSource as DataTable).DefaultView.RowFilter = $"Id LIKE '%{Text}%'";
+                    break;
+                case 1:
+                    (dataGridView.DataSource as DataTable).DefaultView.RowFilter = $"LastName LIKE '%{Text}%'";
+                    break;
+                case 2:
+                    (dataGridView.DataSource as DataTable).DefaultView.RowFilter = $"FirstName LIKE '%{Text}%'";
+                    break;
+                case 3:
+                    (dataGridView.DataSource as DataTable).DefaultView.RowFilter = $"Address LIKE '%{Text}%'";
+                    break;
+                case 4:
+                    (dataGridView.DataSource as DataTable).DefaultView.RowFilter = $"Post LIKE '%{Text}%'";
+                    break;
+                default:
+                    break;
+            }
+        }
+        public void ChangingData(String Text, int Index)
+        {
+
+        }
     }
 }

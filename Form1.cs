@@ -42,27 +42,7 @@ namespace Restaurant
         }
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-
-            switch (comboBox1.SelectedIndex)
-            {
-                case 0:
-                    (dataGridView1.DataSource as DataTable).DefaultView.RowFilter = $"Id LIKE '%{textBox1.Text}%'";
-                    break;
-                case 1:
-                    (dataGridView1.DataSource as DataTable).DefaultView.RowFilter = $"LastName LIKE '%{textBox1.Text}%'";
-                    break;
-                case 2:
-                    (dataGridView1.DataSource as DataTable).DefaultView.RowFilter = $"FirstName LIKE '%{textBox1.Text}%'";
-                    break;
-                case 3:
-                    (dataGridView1.DataSource as DataTable).DefaultView.RowFilter = $"Address LIKE '%{textBox1.Text}%'";
-                    break;
-                case 4:
-                    (dataGridView1.DataSource as DataTable).DefaultView.RowFilter = $"Post LIKE '%{textBox1.Text}%'";
-                    break;
-                default:
-                    break;
-            }
+            employees.SearchEmployee(textBox1.Text, comboBox1.SelectedIndex);
         }  // Поиск сотрудников
         private void initDataTableGridView3()
         {
