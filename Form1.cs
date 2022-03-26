@@ -15,18 +15,21 @@ namespace Restaurant
 {
     public partial class Restaurant : Form
     {
-        private SqlConnection sqlConnection = null;
+        private Employees employees = null;
 
-        private SqlCommandBuilder sqlBuilderEmployees = null;
+
+
+        //private DataBase.sqlConnection DataBase.sqlConnection = null;
+
+        //private SqlCommandBuilder sqlBuilderEmployees = null;
         private SqlCommandBuilder sqlBuilderMenu = null;
         private SqlCommandBuilder sqlBuilderOrders = null;
 
-        private SqlDataAdapter sql_DA_Employees = null;
+        //private SqlDataAdapter Employees.sqlDataAdapter = null;
         private SqlDataAdapter sql_DA_AddOrder = null;
         private SqlDataAdapter sql_DA_Orders = null;
         private SqlDataAdapter sql_DA_OrderedDishes = null;
 
-        private DataSet dataSet = null;
 
         private DataTable dataTableGridView3 = null;
         private DataTable dataTableGridViewOrder = null;
@@ -63,11 +66,11 @@ namespace Restaurant
         }  // Поиск сотрудников
         private void initDataTableGridView3()
         {
-            dataTableGridView3 = dataSet.Tables["Menu"].Clone();
+            dataTableGridView3 = DataBase.dataSet.Tables["Menu"].Clone();
         }
         private void initDataTableGridViewOrder()
         {
-            dataTableGridViewOrder = dataSet.Tables["Menu"].Clone();
+            dataTableGridViewOrder = DataBase.dataSet.Tables["Menu"].Clone();
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -76,8 +79,8 @@ namespace Restaurant
                 case "admin":
                     if (passwordtextbox.Text == "adminpass")
                     {
-                        tabControl.TabPages.Add(tabPageEmployees); 
-                        LoadDataEmployees();
+                        tabControl.TabPages.Add(tabPageEmployees);
+                        //employees.LoadDataEmployees();
                     }
                     //tabControl.Enabled = true;
                     break;
@@ -92,72 +95,8 @@ namespace Restaurant
         {
             try
             {
-                if (e.ColumnIndex == 7)
-                {
-                    string task = dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString();
-
-                    if (task == "Delete")
-                    {
-                        if (MessageBox.Show("Удалить эту строку?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                            == DialogResult.Yes)
-                        {
-                            int rowIndex = e.RowIndex;
-
-                            dataGridView1.Rows.RemoveAt(rowIndex);          // Удаляем строку из таблицы
-
-                            dataSet.Tables["Employees"].Rows[rowIndex].Delete(); // Удаляем строку из dataSet
-
-                            sql_DA_Employees.Update(dataSet, "Employees"); // Удаляем строку из Базы Данных
-                        }
-                    }
-                    else if (task == "Insert")
-                    {
-                        int rowIndex = dataGridView1.Rows.Count - 2;
-
-                        DataRow row = dataSet.Tables["Employees"].NewRow();
-
-                        row["LastName"] = dataGridView1.Rows[rowIndex].Cells["LastName"].Value;
-                        row["FirstName"] = dataGridView1.Rows[rowIndex].Cells["FirstName"].Value;
-                        row["BirthDate"] = dataGridView1.Rows[rowIndex].Cells["BirthDate"].Value;
-                        row["Address"] = dataGridView1.Rows[rowIndex].Cells["Address"].Value;
-                        row["Phone"] = dataGridView1.Rows[rowIndex].Cells["Phone"].Value;
-                        row["Post"] = dataGridView1.Rows[rowIndex].Cells["Post"].Value;
-
-                        dataSet.Tables["Employees"].Rows.Add(row);
-
-                        dataSet.Tables["Employees"].Rows.RemoveAt(dataSet.Tables["Employees"].Rows.Count - 1);
-
-                        dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count - 2);
-
-                        dataGridView1.Rows[e.RowIndex].Cells[7].Value = "Delete";
-
-                        sql_DA_Employees.Update(dataSet, "Employees");
-
-                        newRowAdding = false;
-
-                    }
-                    else if (task == "Update")
-                    {
-                        int r = e.RowIndex;
-
-                        DataTable table = dataSet.Tables["Employees"];
-
-                        table.Rows[r]["LastName"] = dataGridView1.Rows[r].Cells["LastName"].Value;
-                        table.Rows[r]["FirstName"] = dataGridView1.Rows[r].Cells["FirstName"].Value;
-                        table.Rows[r]["BirthDate"] = dataGridView1.Rows[r].Cells["BirthDate"].Value;
-                        table.Rows[r]["Address"] = dataGridView1.Rows[r].Cells["Address"].Value;
-                        table.Rows[r]["Phone"] = dataGridView1.Rows[r].Cells["Phone"].Value;
-                        table.Rows[r]["Post"] = dataGridView1.Rows[r].Cells["Post"].Value;
-
-                        MessageBox.Show($"Обновлено строк: {Convert.ToString(sql_DA_Employees.Update(dataSet, "Employees"))}", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        sql_DA_Employees.Update(table);
-
-                        dataGridView1.Rows[e.RowIndex].Cells[7].Value = "Delete";
-                    }
-
-                    ReloadDataEmployees();
-                }
+                employees.dataGridView1_CellContentClick(e, newRowAdding);
+                ReloadDataEmployees();
             }
             catch (Exception ex)
             {
@@ -213,11 +152,11 @@ namespace Restaurant
             {
                 int r = e.RowIndex;
 
-                foreach (DataRow row in dataSet.Tables["OrderedDishes"].Rows)
+                foreach (DataRow row in DataBase.dataSet.Tables["OrderedDishes"].Rows)
                 {
-                    if (dataSet.Tables["Orders"].Rows[r]["Id"].ToString() == row["OrderId"].ToString())
+                    if (DataBase.dataSet.Tables["Orders"].Rows[r]["Id"].ToString() == row["OrderId"].ToString())
                     {
-                        var addingRows = from addingRow in dataSet.Tables["Menu"].AsEnumerable()
+                        var addingRows = from addingRow in DataBase.dataSet.Tables["Menu"].AsEnumerable()
                                          where (int)addingRow["DishId"] == (int)row["DishId"]
                                          select addingRow;
 
@@ -308,11 +247,11 @@ namespace Restaurant
         {
             try
             {
-                dataSet.Tables["Employees"].Clear();
+                DataBase.dataSet.Tables["Employees"].Clear();
 
-                sql_DA_Employees.Fill(dataSet, "Employees");
+                Employees.sqlDataAdapter.Fill(DataBase.dataSet, "Employees");
 
-                dataGridView1.DataSource = dataSet.Tables["Employees"];
+                dataGridView1.DataSource = DataBase.dataSet.Tables["Employees"];
 
                 for (int i = 0; i < dataGridView1.Rows.Count; i++)
                 {
@@ -327,47 +266,17 @@ namespace Restaurant
             }
         }  
 
-        private void LoadDataEmployees()
-        {
-            try
-            {
-                sql_DA_Employees = new SqlDataAdapter("SELECT *, 'Delete' AS [Command] FROM Employees", sqlConnection);
-
-                sqlBuilderEmployees = new SqlCommandBuilder(sql_DA_Employees);
-
-                sqlBuilderEmployees.GetInsertCommand();
-                sqlBuilderEmployees.GetUpdateCommand();
-                sqlBuilderEmployees.GetDeleteCommand();
-
-                //dataSet = new DataSet();    //Инициализируем новый экземпляр класса DataSet
-
-                sql_DA_Employees.Fill(dataSet, "Employees");
-
-                dataGridView1.DataSource = dataSet.Tables["Employees"];
-
-                for (int i = 0; i < dataGridView1.Rows.Count; i++)
-                {
-                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
-
-                    dataGridView1[7, i] = linkCell;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
         private void ReloadAddOrders()
         {
             try
             {
-                dataSet.Tables["Menu"].Clear();
+                DataBase.dataSet.Tables["Menu"].Clear();
 
-                sql_DA_AddOrder.Fill(dataSet, "Menu");
+                sql_DA_AddOrder.Fill(DataBase.dataSet, "Menu");
 
-                dataGridView2.DataSource = dataSet.Tables["Menu"];
+                dataGridView2.DataSource = DataBase.dataSet.Tables["Menu"];
                 dataGridView3.DataSource = dataTableGridView3;
-                dataGridViewOrders.DataSource = dataSet.Tables["Oredrs"];
+                dataGridViewOrders.DataSource = DataBase.dataSet.Tables["Oredrs"];
                 dataGridViewOrder.DataSource = dataTableGridViewOrder;
 
                 for (int i = 0; i < dataGridView2.Rows.Count; i++)
@@ -386,21 +295,21 @@ namespace Restaurant
         {
             try
             {
-                sql_DA_AddOrder = new SqlDataAdapter("SELECT *, 'Add' AS [Command] FROM Menu", sqlConnection);
-                sql_DA_Orders = new SqlDataAdapter("SELECT *, 'Complete' AS [Command] FROM Orders", sqlConnection);
-                sql_DA_OrderedDishes = new SqlDataAdapter("SELECT * FROM OrderedDishes", sqlConnection);
+                sql_DA_AddOrder = new SqlDataAdapter("SELECT *, 'Add' AS [Command] FROM Menu", DataBase.sqlConnection);
+                sql_DA_Orders = new SqlDataAdapter("SELECT *, 'Complete' AS [Command] FROM Orders", DataBase.sqlConnection);
+                sql_DA_OrderedDishes = new SqlDataAdapter("SELECT * FROM OrderedDishes", DataBase.sqlConnection);
 
                 sqlBuilderOrders = new SqlCommandBuilder(sql_DA_AddOrder);
 
                 dataTableGridView3 = new DataTable();
                 dataTableGridViewOrder = new DataTable();
 
-                sql_DA_AddOrder.Fill(dataSet, "Menu");
-                sql_DA_Orders.Fill(dataSet, "Orders");
-                sql_DA_OrderedDishes.Fill(dataSet, "OrderedDishes");
+                sql_DA_AddOrder.Fill(DataBase.dataSet, "Menu");
+                sql_DA_Orders.Fill(DataBase.dataSet, "Orders");
+                sql_DA_OrderedDishes.Fill(DataBase.dataSet, "OrderedDishes");
 
-                dataGridView2.DataSource = dataSet.Tables["Menu"];
-                dataGridViewOrders.DataSource = dataSet.Tables["Orders"];
+                dataGridView2.DataSource = DataBase.dataSet.Tables["Menu"];
+                dataGridViewOrders.DataSource = DataBase.dataSet.Tables["Orders"];
 
                 for (int i = 0; i < dataGridView2.Rows.Count; i++)
                 {
@@ -428,11 +337,11 @@ namespace Restaurant
         {
             try
             {
-                DataTable tableEmployees = dataSet.Tables["Employees"];
+                DataTable tableEmployees = DataBase.dataSet.Tables["Employees"];
 
                 bool availableWaiter = false;
 
-                foreach (DataRow row in dataSet.Tables["Employees"].Rows)
+                foreach (DataRow row in DataBase.dataSet.Tables["Employees"].Rows)
                 {
                     if (row["Id"].ToString() == textBox3.Text && row["Post"].ToString() == "Официант")
                     {
@@ -452,14 +361,15 @@ namespace Restaurant
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDBsqlServer"].ConnectionString);
+            //DataBase.sqlConnection = new DataBase.sqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDBsqlServer"].ConnectionString);
 
-            dataSet = new DataSet();    //Инициализируем новый экземпляр класса DataSet
+            //DataBase.sqlConnection = new DataBase.sqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDB"].ConnectionString);
 
-            //sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDB"].ConnectionString);
-            if (sqlConnection.State == System.Data.ConnectionState.Closed)
+            employees = new Employees();
+
+            if (DataBase.sqlConnection.State == System.Data.ConnectionState.Closed)
             {
-                sqlConnection.Open();
+                DataBase.sqlConnection.Open();
             }
             tabControl.TabPages.Remove(tabPageEmployees);
             tabControl.TabPages.Clear();
@@ -467,7 +377,7 @@ namespace Restaurant
             tabControl.TabPages.Add(tabPageEmployees);
             tabControl.TabPages.Add(tabPageAddOrder);
             tabControl.TabPages.Add(tabPageOrders);
-            LoadDataEmployees();
+            employees.LoadDataEmployees(ref dataGridView1);
             LoadAddOrders();
         }
 

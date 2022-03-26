@@ -11,13 +11,9 @@ namespace Restaurant
 {
     class DataBase
     {
-        private SqlConnection sqlConnection = null;
+        static public DataSet dataSet = null;
 
-        private SqlCommandBuilder sqlBuilder = null;
-
-        private SqlDataAdapter sqlDataAdapter = null;
-
-        private DataSet dataSet = null;
+        static public SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDBsqlServer"].ConnectionString);
 
         private bool newRowAdding = false;
     }
