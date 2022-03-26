@@ -34,7 +34,7 @@ namespace Restaurant
         private DataTable dataTableGridView3 = null;
         private DataTable dataTableGridViewOrder = null;
 
-        private bool newRowAdding = false;
+        public bool newRowAdding = false;
 
         public Restaurant()
         {
@@ -178,21 +178,7 @@ namespace Restaurant
         {
             try
             {
-                if (newRowAdding == false)
-                {
-                    newRowAdding = true;
-
-                    int lastRow = dataGridView1.Rows.Count - 2;
-
-                    DataGridViewRow row = dataGridView1.Rows[lastRow];
-
-                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
-
-                    dataGridView1[7, lastRow] = linkCell;
-
-                    row.Cells["Command"].Value = "Insert";
-                    
-                }
+                employees.UserAddedRow(ref newRowAdding);
             }
             catch (Exception ex)
             {

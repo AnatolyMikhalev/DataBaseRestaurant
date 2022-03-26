@@ -162,9 +162,23 @@ namespace Restaurant
                     break;
             }
         }
-        public void ChangingData(String Text, int Index)
+        public void UserAddedRow(ref bool newRowAdding)
         {
 
+            if (newRowAdding == false)
+            { 
+                newRowAdding = true;
+
+                int lastRow = dataGridView.Rows.Count - 2;
+
+                DataGridViewRow row = dataGridView.Rows[lastRow];
+
+                DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+
+                dataGridView[7, lastRow] = linkCell;
+
+                row.Cells["Command"].Value = "Insert"; 
+            }
         }
     }
 }
