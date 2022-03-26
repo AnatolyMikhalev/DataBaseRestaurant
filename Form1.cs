@@ -68,7 +68,7 @@ namespace Restaurant
         }   // Password
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            ReloadDataEmployees();
+            employees.ReloadDataEmployees();
             ReloadAddOrders();
         } // Reload
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -76,7 +76,7 @@ namespace Restaurant
             try
             {
                 employees.dataGridView1_CellContentClick(e, newRowAdding);
-                ReloadDataEmployees();
+                employees.ReloadDataEmployees();
             }
             catch (Exception ex)
             {
@@ -178,7 +178,7 @@ namespace Restaurant
         {
             try
             {
-                employees.UserAddedRow(ref newRowAdding);
+                employees.UserAddedRow();
             }
             catch (Exception ex)
             {
@@ -209,28 +209,6 @@ namespace Restaurant
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }  // Employees changing data
-        private void ReloadDataEmployees()
-        {
-            try
-            {
-                DataBase.dataSet.Tables["Employees"].Clear();
-
-                Employees.sqlDataAdapter.Fill(DataBase.dataSet, "Employees");
-
-                dataGridView1.DataSource = DataBase.dataSet.Tables["Employees"];
-
-                for (int i = 0; i < dataGridView1.Rows.Count; i++)
-                {
-                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
-
-                    dataGridView1[7, i] = linkCell;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }  
 
         private void ReloadAddOrders()
         {
@@ -343,7 +321,7 @@ namespace Restaurant
             tabControl.TabPages.Add(tabPageEmployees);
             tabControl.TabPages.Add(tabPageAddOrder);
             tabControl.TabPages.Add(tabPageOrders);
-            employees.LoadDataEmployees(ref dataGridView1);
+            employees.LoadDataEmployees(ref dataGridView1, ref newRowAdding);
             LoadAddOrders();
         }
 

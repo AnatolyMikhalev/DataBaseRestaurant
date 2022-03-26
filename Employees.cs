@@ -16,11 +16,16 @@ namespace Restaurant
         static public SqlDataAdapter sqlDataAdapter = null;
 
         static public DataGridView dataGridView = null;
-        public void LoadDataEmployees(ref DataGridView dataGridView1)
+
+        public bool newRowAdding;
+
+        public void LoadDataEmployees(ref DataGridView dataGridView1, ref bool newRowAdding)
         {
             try
             {
                 dataGridView = dataGridView1;
+
+                this.newRowAdding = newRowAdding;
 
                 sqlDataAdapter = new SqlDataAdapter("SELECT *, 'Delete' AS [Command] FROM Employees", sqlConnection);
 
@@ -162,9 +167,8 @@ namespace Restaurant
                     break;
             }
         }
-        public void UserAddedRow(ref bool newRowAdding)
+        public void UserAddedRow()
         {
-
             if (newRowAdding == false)
             { 
                 newRowAdding = true;
