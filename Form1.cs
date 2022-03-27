@@ -74,21 +74,21 @@ namespace Restaurant
         } // Reload
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            employees.dataGridView1_CellContentClick(e);
+            employees.DataGridView1_CellContentClick(e);
             employees.ReloadDataEmployees();
         }  // Employees Insert Update Delete
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            createOrder.dataGridView2_CellContentClick(sender, e);
+            createOrder.DataGridView2_CellContentClick(sender, e);
         }
 
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            createOrder.dataGridView3_CellContentClick(sender, e);
+            createOrder.DataGridView3_CellContentClick(sender, e);
         }
         private void dataGridViewOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            createOrder.dataGridViewOrders_CellContentClick(sender, e);
+            createOrder.DataGridViewOrders_CellContentClick(sender, e);
         }
         private void dataGridView1_UserAddedRow(object sender, DataGridViewRowEventArgs e)
         {
@@ -101,7 +101,7 @@ namespace Restaurant
         }  // Employees changing data
         private void button2_Click(object sender, EventArgs e)
         {
-            createOrder.button2_Click(sender, e, textBox3.Text);
+            createOrder.Button2_Click(sender, e, textBox3.Text, textBox4.Text);
         }
         private void Form1_Load(object sender, EventArgs e)
         {

@@ -35,11 +35,33 @@ namespace Restaurant
                 sqlBuilder.GetUpdateCommand();
                 sqlBuilder.GetDeleteCommand();
 
-                dataSet = new DataSet();    //Инициализируем новый экземпляр класса DataSet
+                //dataSet = new DataSet();    //Инициализируем новый экземпляр класса DataSet
 
-                sqlDataAdapter.Fill(DataBase.dataSet, "Employees");
+                sqlDataAdapter.Fill(dataSet, "Employees");
 
-                dataGridView.DataSource = DataBase.dataSet.Tables["Employees"];
+                dataGridView.DataSource = dataSet.Tables["Employees"];
+
+                for (int i = 0; i < dataGridView.Rows.Count; i++)
+                {
+                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+
+                    dataGridView[7, i] = linkCell;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        public void ReloadDataEmployees()
+        {
+            try
+            {
+                dataSet.Tables["Employees"].Clear();
+
+                sqlDataAdapter.Fill(dataSet, "Employees");
+
+                dataGridView.DataSource = dataSet.Tables["Employees"];
 
                 for (int i = 0; i < dataGridView.Rows.Count; i++)
                 {
@@ -54,7 +76,7 @@ namespace Restaurant
             }
         }
 
-        public void dataGridView1_CellContentClick(DataGridViewCellEventArgs e)
+        public void DataGridView1_CellContentClick(DataGridViewCellEventArgs e)
         {
             try
             {
@@ -71,16 +93,16 @@ namespace Restaurant
 
                             dataGridView.Rows.RemoveAt(rowIndex);          // Удаляем строку из таблицы
 
-                            DataBase.dataSet.Tables["Employees"].Rows[rowIndex].Delete(); // Удаляем строку из DataBase.dataSet
+                            dataSet.Tables["Employees"].Rows[rowIndex].Delete(); // Удаляем строку из DataBase.dataSet
 
-                            Employees.sqlDataAdapter.Update(DataBase.dataSet, "Employees"); // Удаляем строку из Базы Данных
+                            sqlDataAdapter.Update(dataSet, "Employees"); // Удаляем строку из Базы Данных
                         }
                     }
                     else if (task == "Insert")
                     {
                         int rowIndex = dataGridView.Rows.Count - 2;
 
-                        DataRow row = DataBase.dataSet.Tables["Employees"].NewRow();
+                        DataRow row = dataSet.Tables["Employees"].NewRow();
 
                         row["LastName"] = dataGridView.Rows[rowIndex].Cells["LastName"].Value;
                         row["FirstName"] = dataGridView.Rows[rowIndex].Cells["FirstName"].Value;
@@ -89,15 +111,15 @@ namespace Restaurant
                         row["Phone"] = dataGridView.Rows[rowIndex].Cells["Phone"].Value;
                         row["Post"] = dataGridView.Rows[rowIndex].Cells["Post"].Value;
 
-                        DataBase.dataSet.Tables["Employees"].Rows.Add(row);
+                        dataSet.Tables["Employees"].Rows.Add(row);
 
-                        DataBase.dataSet.Tables["Employees"].Rows.RemoveAt(DataBase.dataSet.Tables["Employees"].Rows.Count - 1);
+                        dataSet.Tables["Employees"].Rows.RemoveAt(dataSet.Tables["Employees"].Rows.Count - 1);
 
                         dataGridView.Rows.RemoveAt(dataGridView.Rows.Count - 2);
 
                         dataGridView.Rows[e.RowIndex].Cells[7].Value = "Delete";
 
-                        Employees.sqlDataAdapter.Update(DataBase.dataSet, "Employees");
+                        sqlDataAdapter.Update(dataSet, "Employees");
 
                         newRowAdding = false;
 
@@ -106,7 +128,7 @@ namespace Restaurant
                     {
                         int r = e.RowIndex;
 
-                        DataTable table = DataBase.dataSet.Tables["Employees"];
+                        DataTable table = dataSet.Tables["Employees"];
 
                         table.Rows[r]["LastName"] = dataGridView.Rows[r].Cells["LastName"].Value;
                         table.Rows[r]["FirstName"] = dataGridView.Rows[r].Cells["FirstName"].Value;
@@ -115,9 +137,9 @@ namespace Restaurant
                         table.Rows[r]["Phone"] = dataGridView.Rows[r].Cells["Phone"].Value;
                         table.Rows[r]["Post"] = dataGridView.Rows[r].Cells["Post"].Value;
 
-                        MessageBox.Show($"Обновлено строк: {Convert.ToString(Employees.sqlDataAdapter.Update(DataBase.dataSet, "Employees"))}", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($"Обновлено строк: {Convert.ToString(sqlDataAdapter.Update(dataSet, "Employees"))}", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                        Employees.sqlDataAdapter.Update(table);
+                        sqlDataAdapter.Update(table);
 
                         dataGridView.Rows[e.RowIndex].Cells[7].Value = "Delete";
                     }
@@ -130,28 +152,6 @@ namespace Restaurant
             }
         }
 
-        public void ReloadDataEmployees()
-        {
-            try
-            {
-                DataBase.dataSet.Tables["Employees"].Clear();
-
-                Employees.sqlDataAdapter.Fill(DataBase.dataSet, "Employees");
-
-                dataGridView.DataSource = DataBase.dataSet.Tables["Employees"];
-
-                for (int i = 0; i < dataGridView.Rows.Count; i++)
-                {
-                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
-
-                    dataGridView[7, i] = linkCell;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
         public void SearchEmployee(String Text, int Index)
         {
             switch (Index)

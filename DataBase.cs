@@ -11,7 +11,7 @@ namespace Restaurant
 {
     class DataBase
     {
-        static public DataSet dataSet = null;
+        static public DataSet dataSet  = new DataSet();
 
         static public SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDBsqlServer"].ConnectionString);
 

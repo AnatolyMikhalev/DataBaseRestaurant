@@ -12,6 +12,7 @@ namespace Restaurant
 {
     class CreateOrder : DataBase
     {
+        static public SqlCommandBuilder sqlBuilderAddOrder = null;
         static public SqlCommandBuilder sqlBuilderOrders = null;
 
         static public SqlDataAdapter sql_DA_AddOrder = null;
@@ -37,31 +38,31 @@ namespace Restaurant
                 this.dataGridViewOrder = dataGridViewOrder;
                 this.dataGridViewOrders = dataGridViewOrders;
 
-                sql_DA_AddOrder = new SqlDataAdapter("SELECT *, 'Add' AS [Command] FROM Menu", DataBase.sqlConnection);
-                sql_DA_Orders = new SqlDataAdapter("SELECT *, 'Complete' AS [Command] FROM Orders", DataBase.sqlConnection);
-                sql_DA_OrderedDishes = new SqlDataAdapter("SELECT * FROM OrderedDishes", DataBase.sqlConnection);
+                sql_DA_AddOrder = new SqlDataAdapter("SELECT *, 'Add' AS [Command] FROM Menu", sqlConnection);
+                sql_DA_Orders = new SqlDataAdapter("SELECT *, 'Complete' AS [Command] FROM Orders", sqlConnection);
+                sql_DA_OrderedDishes = new SqlDataAdapter("SELECT * FROM OrderedDishes", sqlConnection);
 
-                sqlBuilderOrders = new SqlCommandBuilder(sql_DA_AddOrder);
+                sqlBuilderAddOrder = new SqlCommandBuilder(sql_DA_AddOrder);
+                sqlBuilderOrders = new SqlCommandBuilder(sql_DA_Orders);
 
                 dataTableGridView3 = new DataTable();
                 dataTableGridViewOrder = new DataTable();
 
-                sql_DA_AddOrder.Fill(DataBase.dataSet, "Menu");
-                sql_DA_Orders.Fill(DataBase.dataSet, "Orders");
-                sql_DA_OrderedDishes.Fill(DataBase.dataSet, "OrderedDishes");
 
-                this.dataGridView2.DataSource = DataBase.dataSet.Tables["Menu"];
-                this.dataGridViewOrders.DataSource = DataBase.dataSet.Tables["Orders"];
+                sqlBuilderOrders.GetInsertCommand();
+                sqlBuilderOrders.GetUpdateCommand();
+                sqlBuilderOrders.GetDeleteCommand();
 
-                for (int i = 0; i < this.dataGridView2.Rows.Count; i++)
-                {
-                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+                sql_DA_AddOrder.Fill(dataSet, "Menu");
+                sql_DA_Orders.Fill(dataSet, "Orders");
+                sql_DA_OrderedDishes.Fill(dataSet, "OrderedDishes");
 
-                    this.dataGridView2[4, i] = linkCell;
-                }
+                this.dataGridView2.DataSource = dataSet.Tables["Menu"];
+                this.dataGridViewOrders.DataSource = dataSet.Tables["Orders"];
 
-                initDataTableGridView3();
-                initDataTableGridViewOrder();
+
+                InitDataTableGridView3();
+                InitDataTableGridViewOrder();
                 ReloadAddOrders();
             }
             catch (Exception ex)
@@ -69,25 +70,27 @@ namespace Restaurant
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void initDataTableGridView3()
+        private void InitDataTableGridView3()
         {
-            dataTableGridView3 = DataBase.dataSet.Tables["Menu"].Clone();
+            dataTableGridView3 = dataSet.Tables["Menu"].Clone();
         }
-        private void initDataTableGridViewOrder()
+        private void InitDataTableGridViewOrder()
         {
-            dataTableGridViewOrder = DataBase.dataSet.Tables["Menu"].Clone();
+            dataTableGridViewOrder = dataSet.Tables["Menu"].Clone();
         }
         public void ReloadAddOrders()
         {
             try
             {
-                DataBase.dataSet.Tables["Menu"].Clear();
+                dataSet.Tables["Menu"].Clear();
+                dataSet.Tables["Orders"].Clear();
 
-                sql_DA_AddOrder.Fill(DataBase.dataSet, "Menu");
+                sql_DA_AddOrder.Fill(dataSet, "Menu");
+                sql_DA_Orders.Fill(dataSet, "Orders");
 
-                dataGridView2.DataSource = DataBase.dataSet.Tables["Menu"];
+                dataGridView2.DataSource = dataSet.Tables["Menu"];
                 dataGridView3.DataSource = dataTableGridView3;
-                dataGridViewOrders.DataSource = DataBase.dataSet.Tables["Oredrs"];
+                dataGridViewOrders.DataSource = dataSet.Tables["Orders"];
                 dataGridViewOrder.DataSource = dataTableGridViewOrder;
 
                 for (int i = 0; i < dataGridView2.Rows.Count; i++)
@@ -96,6 +99,12 @@ namespace Restaurant
 
                     dataGridView2[4, i] = linkCell;
                 }
+                for (int i = 0; i < this.dataGridViewOrders.Rows.Count; i++)
+                {
+                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+
+                    dataGridViewOrders[3, i] = linkCell;
+                }
             }
             catch (Exception ex)
             {
@@ -103,7 +112,7 @@ namespace Restaurant
             }
         }
 
-        public void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        public void DataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
@@ -127,7 +136,7 @@ namespace Restaurant
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        public void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        public void DataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
@@ -145,15 +154,15 @@ namespace Restaurant
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        public void button2_Click(object sender, EventArgs e, String Id)
+        public void Button2_Click(object sender, EventArgs e, String Id, String Table)
         {
             try
             {
-                DataTable tableEmployees = DataBase.dataSet.Tables["Employees"];
+                DataTable tableEmployees = dataSet.Tables["Employees"];
 
                 bool availableWaiter = false;
 
-                foreach (DataRow row in DataBase.dataSet.Tables["Employees"].Rows)
+                foreach (DataRow row in dataSet.Tables["Employees"].Rows)
                 {
                     if (row["Id"].ToString() == Id && row["Post"].ToString() == "Официант")
                     {
@@ -166,15 +175,17 @@ namespace Restaurant
                     throw new Exception("Официанта с заданным Id не существует");
                 }
 
-                foreach (DataRow row in DataBase.dataSet.Tables["Employees"].Rows)
-                {
-                    if (row["Id"].ToString() == Id && row["Post"].ToString() == "Официант")
-                    {
-                        availableWaiter = true;
-                        break;
-                    }
-                }
 
+                DataRow newAddingRow = dataSet.Tables["Orders"].NewRow();
+
+                newAddingRow["Table"] = Convert.ToInt32(Table);
+                newAddingRow["WaiterId"] = Convert.ToInt32(Id);
+
+                dataSet.Tables["Orders"].Rows.Add(newAddingRow);
+
+                sql_DA_Orders.Update(dataSet, "Orders");
+                
+                ReloadAddOrders();
 
             }
             catch (Exception ex)
@@ -183,17 +194,19 @@ namespace Restaurant
             }
         }
 
-        public void dataGridViewOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        public void DataGridViewOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
                 int r = e.RowIndex;
 
-                foreach (DataRow row in DataBase.dataSet.Tables["OrderedDishes"].Rows)
+                dataTableGridViewOrder.Clear();
+
+                foreach (DataRow row in dataSet.Tables["OrderedDishes"].Rows)
                 {
-                    if (DataBase.dataSet.Tables["Orders"].Rows[r]["Id"].ToString() == row["OrderId"].ToString())
+                    if (dataSet.Tables["Orders"].Rows[r]["Id"].ToString() == row["OrderId"].ToString())
                     {
-                        var addingRows = from addingRow in DataBase.dataSet.Tables["Menu"].AsEnumerable()
+                        var addingRows = from addingRow in dataSet.Tables["Menu"].AsEnumerable()
                                          where (int)addingRow["DishId"] == (int)row["DishId"]
                                          select addingRow;
 
@@ -206,25 +219,11 @@ namespace Restaurant
                             newAddingRow["Price"] = addingRow["Price"];
                             newAddingRow["DishWeight"] = addingRow["DishWeight"];
 
-
                             dataTableGridViewOrder.Rows.Add(newAddingRow);
                         }
-
-                        //DataRow addingRow = dataTableGridViewOrder.NewRow();
-
-                        //row["DishID"] = dataGridView2.Rows[r].Cells["DishID"].Value;
-                        //row["DishName"] = dataGridView2.Rows[r].Cells["DishName"].Value;
-                        //row["Price"] = dataGridView2.Rows[r].Cells["Price"].Value;
-                        //row["DishWeight"] = dataGridView2.Rows[r].Cells["DishWeight"].Value;
-
-                        //добавляем в table строку
                     }
                 }
 
-                //задаём table как datasourse of datagridvieworder
-
-
-                // dataTableGridViewOrder.Rows.Add(row);
             }
             catch (Exception ex)
             {
