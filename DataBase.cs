@@ -16,5 +16,13 @@ namespace Restaurant
         static public SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDBsqlServer"].ConnectionString);
 
         //private bool newRowAdding = false;
+
+        public static void OpenConnection()
+        {
+            if (sqlConnection.State == System.Data.ConnectionState.Closed)
+            {
+                sqlConnection.Open();
+            }
+        }
     }
 }

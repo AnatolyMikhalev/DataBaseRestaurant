@@ -31,6 +31,7 @@ namespace Restaurant
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Restaurant));
             this.tabPageOrders = new System.Windows.Forms.TabPage();
+            this.dataGridViewOrder = new System.Windows.Forms.DataGridView();
             this.dataGridViewOrders = new System.Windows.Forms.DataGridView();
             this.tabPageEmployees = new System.Windows.Forms.TabPage();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -58,8 +59,8 @@ namespace Restaurant
             this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.dataGridViewOrder = new System.Windows.Forms.DataGridView();
             this.tabPageOrders.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOrder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOrders)).BeginInit();
             this.tabPageEmployees.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -70,7 +71,6 @@ namespace Restaurant
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.menuStrip2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOrder)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPageOrders
@@ -83,6 +83,15 @@ namespace Restaurant
             this.tabPageOrders.TabIndex = 3;
             this.tabPageOrders.Text = "Заказы";
             this.tabPageOrders.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewOrder
+            // 
+            this.dataGridViewOrder.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewOrder.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewOrder.Location = new System.Drawing.Point(375, 181);
+            this.dataGridViewOrder.Name = "dataGridViewOrder";
+            this.dataGridViewOrder.Size = new System.Drawing.Size(409, 201);
+            this.dataGridViewOrder.TabIndex = 10;
             // 
             // dataGridViewOrders
             // 
@@ -191,6 +200,7 @@ namespace Restaurant
             this.passwordtextbox.Name = "passwordtextbox";
             this.passwordtextbox.Size = new System.Drawing.Size(125, 20);
             this.passwordtextbox.TabIndex = 1;
+            this.passwordtextbox.UseSystemPasswordChar = true;
             // 
             // logintextbox
             // 
@@ -356,15 +366,6 @@ namespace Restaurant
             this.toolStripButton1.Text = "Обновить";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // dataGridViewOrder
-            // 
-            this.dataGridViewOrder.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridViewOrder.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewOrder.Location = new System.Drawing.Point(375, 181);
-            this.dataGridViewOrder.Name = "dataGridViewOrder";
-            this.dataGridViewOrder.Size = new System.Drawing.Size(409, 201);
-            this.dataGridViewOrder.TabIndex = 10;
-            // 
             // Restaurant
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -378,6 +379,7 @@ namespace Restaurant
             this.Text = " ";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabPageOrders.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOrder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOrders)).EndInit();
             this.tabPageEmployees.ResumeLayout(false);
             this.tabPageEmployees.PerformLayout();
@@ -393,7 +395,6 @@ namespace Restaurant
             this.menuStrip2.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOrder)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

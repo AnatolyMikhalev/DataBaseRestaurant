@@ -11,7 +11,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace Restaurant 
+namespace Restaurant
 {
     public partial class Restaurant : Form
     {
@@ -70,263 +70,56 @@ namespace Restaurant
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             employees.ReloadDataEmployees();
-            ReloadAddOrders();
+            createOrder.ReloadAddOrders();
         } // Reload
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            try
-            {
-                employees.dataGridView1_CellContentClick(e);
-                employees.ReloadDataEmployees();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            employees.dataGridView1_CellContentClick(e);
+            employees.ReloadDataEmployees();
         }  // Employees Insert Update Delete
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            try
-            { 
-                if (e.ColumnIndex == 4)
-                {
-                    int r = e.RowIndex;
-
-                    DataRow row = dataTableGridView3.NewRow();
-
-                    row["DishID"] = dataGridView2.Rows[r].Cells["DishID"].Value;
-                    row["DishName"] = dataGridView2.Rows[r].Cells["DishName"].Value;
-                    row["Price"] = dataGridView2.Rows[r].Cells["Price"].Value;
-                    row["DishWeight"] = dataGridView2.Rows[r].Cells["DishWeight"].Value;
-                    row["Command"] = "Remove";
-
-                    dataTableGridView3.Rows.Add(row);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            createOrder.dataGridView2_CellContentClick(sender, e);
         }
 
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            try
-            {
-                if (e.ColumnIndex == 4)
-                {
-                    if (MessageBox.Show("Удалить блюдо из заказа?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                            == DialogResult.Yes)
-                    {
-                        dataTableGridView3.Rows.RemoveAt(e.RowIndex);          // Удаляем строку из таблицы
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            createOrder.dataGridView3_CellContentClick(sender, e);
         }
         private void dataGridViewOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            try
-            {
-                int r = e.RowIndex;
-
-                foreach (DataRow row in DataBase.dataSet.Tables["OrderedDishes"].Rows)
-                {
-                    if (DataBase.dataSet.Tables["Orders"].Rows[r]["Id"].ToString() == row["OrderId"].ToString())
-                    {
-                        var addingRows = from addingRow in DataBase.dataSet.Tables["Menu"].AsEnumerable()
-                                         where (int)addingRow["DishId"] == (int)row["DishId"]
-                                         select addingRow;
-
-                        foreach (var addingRow in addingRows)
-                        {
-                            DataRow newAddingRow = dataTableGridViewOrder.NewRow();
-
-                            newAddingRow["DishID"] = addingRow["DishID"];
-                            newAddingRow["DishName"] = addingRow["DishName"];
-                            newAddingRow["Price"] = addingRow["Price"];
-                            newAddingRow["DishWeight"] = addingRow["DishWeight"];
-
-
-                            dataTableGridViewOrder.Rows.Add(newAddingRow);
-                        }
-
-                        //DataRow addingRow = dataTableGridViewOrder.NewRow();
-
-                        //row["DishID"] = dataGridView2.Rows[r].Cells["DishID"].Value;
-                        //row["DishName"] = dataGridView2.Rows[r].Cells["DishName"].Value;
-                        //row["Price"] = dataGridView2.Rows[r].Cells["Price"].Value;
-                        //row["DishWeight"] = dataGridView2.Rows[r].Cells["DishWeight"].Value;
-
-                        //добавляем в table строку
-                    }
-                }
-
-                //задаём table как datasourse of datagridvieworder
-
-
-               // dataTableGridViewOrder.Rows.Add(row);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            createOrder.dataGridViewOrders_CellContentClick(sender, e);
         }
         private void dataGridView1_UserAddedRow(object sender, DataGridViewRowEventArgs e)
         {
-            try
-            {
-                employees.UserAddedRow();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            employees.UserAddedRow();
         } // Employees adding row
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            try
-            {
-                employees.CellValueChanged();
-
-                //if (newRowAdding == false)
-                //{
-                //    int rowIndex = dataGridView1.SelectedCells[0].RowIndex;
-
-                //    DataGridViewRow editingRow = dataGridView1.Rows[rowIndex];
-
-                //    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
-
-                //    dataGridView1[7, rowIndex] = linkCell;
-
-                //    editingRow.Cells["Command"].Value = "Update";
-
-                //}
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            employees.CellValueChanged();
         }  // Employees changing data
-
-        private void ReloadAddOrders()
-        {
-            try
-            {
-                DataBase.dataSet.Tables["Menu"].Clear();
-
-                sql_DA_AddOrder.Fill(DataBase.dataSet, "Menu");
-
-                dataGridView2.DataSource = DataBase.dataSet.Tables["Menu"];
-                dataGridView3.DataSource = dataTableGridView3;
-                dataGridViewOrders.DataSource = DataBase.dataSet.Tables["Oredrs"];
-                dataGridViewOrder.DataSource = dataTableGridViewOrder;
-
-                for (int i = 0; i < dataGridView2.Rows.Count; i++)
-                {
-                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
-
-                    dataGridView2[4, i] = linkCell;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        private void LoadAddOrders() 
-        {
-            try
-            {
-                sql_DA_AddOrder = new SqlDataAdapter("SELECT *, 'Add' AS [Command] FROM Menu", DataBase.sqlConnection);
-                sql_DA_Orders = new SqlDataAdapter("SELECT *, 'Complete' AS [Command] FROM Orders", DataBase.sqlConnection);
-                sql_DA_OrderedDishes = new SqlDataAdapter("SELECT * FROM OrderedDishes", DataBase.sqlConnection);
-
-                sqlBuilderOrders = new SqlCommandBuilder(sql_DA_AddOrder);
-
-                dataTableGridView3 = new DataTable();
-                dataTableGridViewOrder = new DataTable();
-
-                sql_DA_AddOrder.Fill(DataBase.dataSet, "Menu");
-                sql_DA_Orders.Fill(DataBase.dataSet, "Orders");
-                sql_DA_OrderedDishes.Fill(DataBase.dataSet, "OrderedDishes");
-
-                dataGridView2.DataSource = DataBase.dataSet.Tables["Menu"];
-                dataGridViewOrders.DataSource = DataBase.dataSet.Tables["Orders"];
-
-                for (int i = 0; i < dataGridView2.Rows.Count; i++)
-                {
-                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
-
-                    dataGridView2[4, i] = linkCell;
-                }
-                for (int i = 0; i < dataGridViewOrders.Rows.Count; i++)
-                {
-                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
-
-                    dataGridView2[3, i] = linkCell;
-                }
-
-                initDataTableGridView3();
-                initDataTableGridViewOrder();
-                ReloadAddOrders();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
         private void button2_Click(object sender, EventArgs e)
         {
-            try
-            {
-                DataTable tableEmployees = DataBase.dataSet.Tables["Employees"];
-
-                bool availableWaiter = false;
-
-                foreach (DataRow row in DataBase.dataSet.Tables["Employees"].Rows)
-                {
-                    if (row["Id"].ToString() == textBox3.Text && row["Post"].ToString() == "Официант")
-                    {
-                        availableWaiter = true;
-                        break;
-                    }
-                }
-                if (!availableWaiter)
-                {
-                    throw new Exception("Официанта с заданным Id не существует");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            createOrder.button2_Click(sender, e, textBox3.Text);
         }
         private void Form1_Load(object sender, EventArgs e)
         {
             //DataBase.sqlConnection = new DataBase.sqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDBsqlServer"].ConnectionString);
-
             //DataBase.sqlConnection = new DataBase.sqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDB"].ConnectionString);
 
-            employees = new Employees();
-            createOrder = new CreateOrder();
+            employees = new Employees(ref dataGridView1, ref newRowAdding);
+            createOrder = new CreateOrder(ref dataGridView2, ref dataGridView3, ref dataGridViewOrder, ref dataGridViewOrders);
 
-            if (DataBase.sqlConnection.State == System.Data.ConnectionState.Closed)
-            {
-                DataBase.sqlConnection.Open();
-            }
+            DataBase.OpenConnection();
+
+
             tabControl.TabPages.Remove(tabPageEmployees);
             tabControl.TabPages.Clear();
             tabControl.TabPages.Add(tabPageAutorizaion);
             tabControl.TabPages.Add(tabPageEmployees);
             tabControl.TabPages.Add(tabPageAddOrder);
             tabControl.TabPages.Add(tabPageOrders);
-            employees.LoadDataEmployees(ref dataGridView1, ref newRowAdding);
-            LoadAddOrders();
         }
 
     }

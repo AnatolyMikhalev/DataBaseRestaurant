@@ -19,7 +19,7 @@ namespace Restaurant
 
         public bool newRowAdding;
 
-        public void LoadDataEmployees(ref DataGridView dataGridView1, ref bool newRowAdding)
+        public Employees(ref DataGridView dataGridView1, ref bool newRowAdding)
         {
             try
             {
@@ -56,69 +56,77 @@ namespace Restaurant
 
         public void dataGridView1_CellContentClick(DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 7)
+            try
             {
-                string task = dataGridView.Rows[e.RowIndex].Cells[7].Value.ToString();
-
-                if (task == "Delete")
+                if (e.ColumnIndex == 7)
                 {
-                    if (MessageBox.Show("Удалить эту строку?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                        == DialogResult.Yes)
+                    string task = dataGridView.Rows[e.RowIndex].Cells[7].Value.ToString();
+
+                    if (task == "Delete")
                     {
-                        int rowIndex = e.RowIndex;
+                        if (MessageBox.Show("Удалить эту строку?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                            == DialogResult.Yes)
+                        {
+                            int rowIndex = e.RowIndex;
 
-                        dataGridView.Rows.RemoveAt(rowIndex);          // Удаляем строку из таблицы
+                            dataGridView.Rows.RemoveAt(rowIndex);          // Удаляем строку из таблицы
 
-                        DataBase.dataSet.Tables["Employees"].Rows[rowIndex].Delete(); // Удаляем строку из DataBase.dataSet
+                            DataBase.dataSet.Tables["Employees"].Rows[rowIndex].Delete(); // Удаляем строку из DataBase.dataSet
 
-                        Employees.sqlDataAdapter.Update(DataBase.dataSet, "Employees"); // Удаляем строку из Базы Данных
+                            Employees.sqlDataAdapter.Update(DataBase.dataSet, "Employees"); // Удаляем строку из Базы Данных
+                        }
+                    }
+                    else if (task == "Insert")
+                    {
+                        int rowIndex = dataGridView.Rows.Count - 2;
+
+                        DataRow row = DataBase.dataSet.Tables["Employees"].NewRow();
+
+                        row["LastName"] = dataGridView.Rows[rowIndex].Cells["LastName"].Value;
+                        row["FirstName"] = dataGridView.Rows[rowIndex].Cells["FirstName"].Value;
+                        row["BirthDate"] = dataGridView.Rows[rowIndex].Cells["BirthDate"].Value;
+                        row["Address"] = dataGridView.Rows[rowIndex].Cells["Address"].Value;
+                        row["Phone"] = dataGridView.Rows[rowIndex].Cells["Phone"].Value;
+                        row["Post"] = dataGridView.Rows[rowIndex].Cells["Post"].Value;
+
+                        DataBase.dataSet.Tables["Employees"].Rows.Add(row);
+
+                        DataBase.dataSet.Tables["Employees"].Rows.RemoveAt(DataBase.dataSet.Tables["Employees"].Rows.Count - 1);
+
+                        dataGridView.Rows.RemoveAt(dataGridView.Rows.Count - 2);
+
+                        dataGridView.Rows[e.RowIndex].Cells[7].Value = "Delete";
+
+                        Employees.sqlDataAdapter.Update(DataBase.dataSet, "Employees");
+
+                        newRowAdding = false;
+
+                    }
+                    else if (task == "Update")
+                    {
+                        int r = e.RowIndex;
+
+                        DataTable table = DataBase.dataSet.Tables["Employees"];
+
+                        table.Rows[r]["LastName"] = dataGridView.Rows[r].Cells["LastName"].Value;
+                        table.Rows[r]["FirstName"] = dataGridView.Rows[r].Cells["FirstName"].Value;
+                        table.Rows[r]["BirthDate"] = dataGridView.Rows[r].Cells["BirthDate"].Value;
+                        table.Rows[r]["Address"] = dataGridView.Rows[r].Cells["Address"].Value;
+                        table.Rows[r]["Phone"] = dataGridView.Rows[r].Cells["Phone"].Value;
+                        table.Rows[r]["Post"] = dataGridView.Rows[r].Cells["Post"].Value;
+
+                        MessageBox.Show($"Обновлено строк: {Convert.ToString(Employees.sqlDataAdapter.Update(DataBase.dataSet, "Employees"))}", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        Employees.sqlDataAdapter.Update(table);
+
+                        dataGridView.Rows[e.RowIndex].Cells[7].Value = "Delete";
                     }
                 }
-                else if (task == "Insert")
-                {
-                    int rowIndex = dataGridView.Rows.Count - 2;
-
-                    DataRow row = DataBase.dataSet.Tables["Employees"].NewRow();
-
-                    row["LastName"] = dataGridView.Rows[rowIndex].Cells["LastName"].Value;
-                    row["FirstName"] = dataGridView.Rows[rowIndex].Cells["FirstName"].Value;
-                    row["BirthDate"] = dataGridView.Rows[rowIndex].Cells["BirthDate"].Value;
-                    row["Address"] = dataGridView.Rows[rowIndex].Cells["Address"].Value;
-                    row["Phone"] = dataGridView.Rows[rowIndex].Cells["Phone"].Value;
-                    row["Post"] = dataGridView.Rows[rowIndex].Cells["Post"].Value;
-
-                    DataBase.dataSet.Tables["Employees"].Rows.Add(row);
-
-                    DataBase.dataSet.Tables["Employees"].Rows.RemoveAt(DataBase.dataSet.Tables["Employees"].Rows.Count - 1);
-
-                    dataGridView.Rows.RemoveAt(dataGridView.Rows.Count - 2);
-
-                    dataGridView.Rows[e.RowIndex].Cells[7].Value = "Delete";
-
-                    Employees.sqlDataAdapter.Update(DataBase.dataSet, "Employees");
-
-                    newRowAdding = false;
-
-                }
-                else if (task == "Update")
-                {
-                    int r = e.RowIndex;
-
-                    DataTable table = DataBase.dataSet.Tables["Employees"];
-
-                    table.Rows[r]["LastName"] = dataGridView.Rows[r].Cells["LastName"].Value;
-                    table.Rows[r]["FirstName"] = dataGridView.Rows[r].Cells["FirstName"].Value;
-                    table.Rows[r]["BirthDate"] = dataGridView.Rows[r].Cells["BirthDate"].Value;
-                    table.Rows[r]["Address"] = dataGridView.Rows[r].Cells["Address"].Value;
-                    table.Rows[r]["Phone"] = dataGridView.Rows[r].Cells["Phone"].Value;
-                    table.Rows[r]["Post"] = dataGridView.Rows[r].Cells["Post"].Value;
-
-                    MessageBox.Show($"Обновлено строк: {Convert.ToString(Employees.sqlDataAdapter.Update(DataBase.dataSet, "Employees"))}", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    Employees.sqlDataAdapter.Update(table);
-
-                    dataGridView.Rows[e.RowIndex].Cells[7].Value = "Delete";
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                newRowAdding = false;
             }
         }
 
@@ -169,36 +177,51 @@ namespace Restaurant
         }
         public void UserAddedRow()
         {
-            if (newRowAdding == false)
-            { 
-                newRowAdding = true;
+            try
+            {
+                if (newRowAdding == false)
+                {
+                    newRowAdding = true;
 
-                int lastRow = dataGridView.Rows.Count - 2;
+                    int lastRow = dataGridView.Rows.Count - 2;
 
-                DataGridViewRow row = dataGridView.Rows[lastRow];
+                    DataGridViewRow row = dataGridView.Rows[lastRow];
 
-                DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
 
-                dataGridView[7, lastRow] = linkCell;
+                    dataGridView[7, lastRow] = linkCell;
 
-                row.Cells["Command"].Value = "Insert"; 
+                    row.Cells["Command"].Value = "Insert";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         public void CellValueChanged()
         {
-            if (newRowAdding == false)
+            try
             {
-                int rowIndex = dataGridView.SelectedCells[0].RowIndex;
+                if (newRowAdding == false)
+                {
+                    int rowIndex = dataGridView.SelectedCells[0].RowIndex;
 
-                DataGridViewRow editingRow = dataGridView.Rows[rowIndex];
+                    DataGridViewRow editingRow = dataGridView.Rows[rowIndex];
 
-                DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
 
-                dataGridView[7, rowIndex] = linkCell;
+                    dataGridView[7, rowIndex] = linkCell;
 
-                editingRow.Cells["Command"].Value = "Update";
+                    editingRow.Cells["Command"].Value = "Update";
 
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
 }
+
