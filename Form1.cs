@@ -109,7 +109,7 @@ namespace Restaurant
             //DataBase.sqlConnection = new DataBase.sqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDB"].ConnectionString);
 
             employees = new Employees(ref dataGridView1, ref newRowAdding);
-            createOrder = new CreateOrder(ref dataGridView2, ref dataGridView3, ref dataGridViewOrder, ref dataGridViewOrders);
+            createOrder = new CreateOrder(ref dataGridViewMenu, ref dataGridViewSelectDishes, ref dataGridViewOrder, ref dataGridViewOrders);
 
             DataBase.OpenConnection();
 

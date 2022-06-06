@@ -13,7 +13,7 @@ namespace Restaurant
     {
         static public DataSet dataSet  = new DataSet();
 
-        static public SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDBsqlServer"].ConnectionString);
+        static public SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["RestaurantDB"].ConnectionString);
 
         //private bool newRowAdding = false;
 

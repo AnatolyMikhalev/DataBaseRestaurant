@@ -15,12 +15,12 @@ namespace Restaurant
         static public SqlCommandBuilder sqlBuilderAddOrder = null;
         static public SqlCommandBuilder sqlBuilderOrders = null;
 
-        static public SqlDataAdapter sql_DA_AddOrder = null;
+        static public SqlDataAdapter sql_DA_Menu = null;
         static public SqlDataAdapter sql_DA_Orders = null;
         static public SqlDataAdapter sql_DA_OrderedDishes = null;
 
-        public DataGridView dataGridView2 = null;
-        public DataGridView dataGridView3 = null;
+        public DataGridView dataGridViewMenu = null;
+        public DataGridView dataGridViewSelectDishes = null;
         public DataGridView dataGridViewOrder = null;
         public DataGridView dataGridViewOrders = null;
 
@@ -33,16 +33,16 @@ namespace Restaurant
         {
             try
             {
-                this.dataGridView2 = dataGridView2;
-                this.dataGridView3 = dataGridView3;
+                this.dataGridViewMenu = dataGridView2;
+                this.dataGridViewSelectDishes = dataGridView3;
                 this.dataGridViewOrder = dataGridViewOrder;
                 this.dataGridViewOrders = dataGridViewOrders;
 
-                sql_DA_AddOrder = new SqlDataAdapter("SELECT *, 'Add' AS [Command] FROM Menu", sqlConnection);
+                sql_DA_Menu = new SqlDataAdapter("SELECT *, 'Add' AS [Command] FROM Menu", sqlConnection);
                 sql_DA_Orders = new SqlDataAdapter("SELECT *, 'Complete' AS [Command] FROM Orders", sqlConnection);
                 sql_DA_OrderedDishes = new SqlDataAdapter("SELECT * FROM OrderedDishes", sqlConnection);
 
-                sqlBuilderAddOrder = new SqlCommandBuilder(sql_DA_AddOrder);
+                sqlBuilderAddOrder = new SqlCommandBuilder(sql_DA_Menu);
                 sqlBuilderOrders = new SqlCommandBuilder(sql_DA_Orders);
 
                 dataTableGridView3 = new DataTable();
@@ -53,11 +53,11 @@ namespace Restaurant
                 sqlBuilderOrders.GetUpdateCommand();
                 sqlBuilderOrders.GetDeleteCommand();
 
-                sql_DA_AddOrder.Fill(dataSet, "Menu");
+                sql_DA_Menu.Fill(dataSet, "Menu");
                 sql_DA_Orders.Fill(dataSet, "Orders");
                 sql_DA_OrderedDishes.Fill(dataSet, "OrderedDishes");
 
-                this.dataGridView2.DataSource = dataSet.Tables["Menu"];
+                this.dataGridViewMenu.DataSource = dataSet.Tables["Menu"];
                 this.dataGridViewOrders.DataSource = dataSet.Tables["Orders"];
 
 
@@ -85,19 +85,19 @@ namespace Restaurant
                 dataSet.Tables["Menu"].Clear();
                 dataSet.Tables["Orders"].Clear();
 
-                sql_DA_AddOrder.Fill(dataSet, "Menu");
+                sql_DA_Menu.Fill(dataSet, "Menu");
                 sql_DA_Orders.Fill(dataSet, "Orders");
 
-                dataGridView2.DataSource = dataSet.Tables["Menu"];
-                dataGridView3.DataSource = dataTableGridView3;
+                dataGridViewMenu.DataSource = dataSet.Tables["Menu"];
+                dataGridViewSelectDishes.DataSource = dataTableGridView3;
                 dataGridViewOrders.DataSource = dataSet.Tables["Orders"];
                 dataGridViewOrder.DataSource = dataTableGridViewOrder;
 
-                for (int i = 0; i < dataGridView2.Rows.Count; i++)
+                for (int i = 0; i < dataGridViewMenu.Rows.Count; i++)
                 {
                     DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
 
-                    dataGridView2[4, i] = linkCell;
+                    dataGridViewMenu[4, i] = linkCell;
                 }
                 for (int i = 0; i < this.dataGridViewOrders.Rows.Count; i++)
                 {
@@ -122,10 +122,10 @@ namespace Restaurant
 
                     DataRow row = dataTableGridView3.NewRow();
 
-                    row["DishID"] = dataGridView2.Rows[r].Cells["DishID"].Value;
-                    row["DishName"] = dataGridView2.Rows[r].Cells["DishName"].Value;
-                    row["Price"] = dataGridView2.Rows[r].Cells["Price"].Value;
-                    row["DishWeight"] = dataGridView2.Rows[r].Cells["DishWeight"].Value;
+                    row["DishID"] = dataGridViewMenu.Rows[r].Cells["DishID"].Value;
+                    row["DishName"] = dataGridViewMenu.Rows[r].Cells["DishName"].Value;
+                    row["Price"] = dataGridViewMenu.Rows[r].Cells["Price"].Value;
+                    row["DishWeight"] = dataGridViewMenu.Rows[r].Cells["DishWeight"].Value;
                     row["Command"] = "Remove";
 
                     dataTableGridView3.Rows.Add(row);
@@ -175,7 +175,6 @@ namespace Restaurant
                     throw new Exception("Официанта с заданным Id не существует");
                 }
 
-
                 DataRow newAddingRow = dataSet.Tables["Orders"].NewRow();
 
                 newAddingRow["Table"] = Convert.ToInt32(Table);
@@ -186,6 +185,13 @@ namespace Restaurant
                 sql_DA_Orders.Update(dataSet, "Orders");
                 
                 ReloadAddOrders();
+
+                var addingRows = dataTableGridView3.AsEnumerable().
+                                 Select(order => new
+                                 {
+                                     DishID = order.Field<int>("DishID"),
+                                     OrderId = Id,
+                                 });   // TODO: Реализовал LINQ Запрос, реализовать добавление результата в таблицу OrderedDishes
 
             }
             catch (Exception ex)
@@ -202,27 +208,29 @@ namespace Restaurant
 
                 dataTableGridViewOrder.Clear();
 
-                foreach (DataRow row in dataSet.Tables["OrderedDishes"].Rows)
-                {
-                    if (dataSet.Tables["Orders"].Rows[r]["Id"].ToString() == row["OrderId"].ToString())
-                    {
-                        var addingRows = from addingRow in dataSet.Tables["Menu"].AsEnumerable()
-                                         where (int)addingRow["DishId"] == (int)row["DishId"]
-                                         select addingRow;
 
-                        foreach (var addingRow in addingRows)
-                        {
-                            DataRow newAddingRow = dataTableGridViewOrder.NewRow();
 
-                            newAddingRow["DishID"] = addingRow["DishID"];
-                            newAddingRow["DishName"] = addingRow["DishName"];
-                            newAddingRow["Price"] = addingRow["Price"];
-                            newAddingRow["DishWeight"] = addingRow["DishWeight"];
+                //foreach (DataRow row in dataSet.Tables["OrderedDishes"].Rows)
+                //{
+                //    if (dataSet.Tables["Orders"].Rows[r]["Id"].ToString() == row["OrderId"].ToString())
+                //    {
+                //        var addingRows = from addingRow in dataSet.Tables["Menu"].AsEnumerable()
+                //                         where (int)addingRow["DishId"] == (int)row["DishId"]
+                //                         select addingRow;
 
-                            dataTableGridViewOrder.Rows.Add(newAddingRow);
-                        }
-                    }
-                }
+                //        foreach (var addingRow in addingRows)
+                //        {
+                //            DataRow newAddingRow = dataTableGridViewOrder.NewRow();
+
+                //            newAddingRow["DishID"] = addingRow["DishID"];
+                //            newAddingRow["DishName"] = addingRow["DishName"];
+                //            newAddingRow["Price"] = addingRow["Price"];
+                //            newAddingRow["DishWeight"] = addingRow["DishWeight"];
+
+                //            dataTableGridViewOrder.Rows.Add(newAddingRow);
+                //        }
+                //    }
+                //}
 
             }
             catch (Exception ex)

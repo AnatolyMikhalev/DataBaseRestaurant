@@ -50,10 +50,10 @@ namespace Restaurant
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
-            this.dataGridView3 = new System.Windows.Forms.DataGridView();
+            this.dataGridViewSelectDishes = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.dataGridViewMenu = new System.Windows.Forms.DataGridView();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,8 +67,8 @@ namespace Restaurant
             this.tabPageAutorizaion.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPageAddOrder.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSelectDishes)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMenu)).BeginInit();
             this.menuStrip2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -229,10 +229,10 @@ namespace Restaurant
             this.tabPageAddOrder.Controls.Add(this.label5);
             this.tabPageAddOrder.Controls.Add(this.label4);
             this.tabPageAddOrder.Controls.Add(this.button2);
-            this.tabPageAddOrder.Controls.Add(this.dataGridView3);
+            this.tabPageAddOrder.Controls.Add(this.dataGridViewSelectDishes);
             this.tabPageAddOrder.Controls.Add(this.label3);
             this.tabPageAddOrder.Controls.Add(this.textBox2);
-            this.tabPageAddOrder.Controls.Add(this.dataGridView2);
+            this.tabPageAddOrder.Controls.Add(this.dataGridViewMenu);
             this.tabPageAddOrder.Location = new System.Drawing.Point(4, 22);
             this.tabPageAddOrder.Name = "tabPageAddOrder";
             this.tabPageAddOrder.Size = new System.Drawing.Size(792, 410);
@@ -283,15 +283,15 @@ namespace Restaurant
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // dataGridView3
+            // dataGridViewSelectDishes
             // 
-            this.dataGridView3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView3.Location = new System.Drawing.Point(377, 160);
-            this.dataGridView3.Name = "dataGridView3";
-            this.dataGridView3.Size = new System.Drawing.Size(409, 201);
-            this.dataGridView3.TabIndex = 9;
-            this.dataGridView3.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
+            this.dataGridViewSelectDishes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewSelectDishes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewSelectDishes.Location = new System.Drawing.Point(377, 160);
+            this.dataGridViewSelectDishes.Name = "dataGridViewSelectDishes";
+            this.dataGridViewSelectDishes.Size = new System.Drawing.Size(409, 201);
+            this.dataGridViewSelectDishes.TabIndex = 9;
+            this.dataGridViewSelectDishes.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
             // 
             // label3
             // 
@@ -309,16 +309,16 @@ namespace Restaurant
             this.textBox2.Size = new System.Drawing.Size(100, 20);
             this.textBox2.TabIndex = 7;
             // 
-            // dataGridView2
+            // dataGridViewMenu
             // 
-            this.dataGridView2.AllowUserToAddRows = false;
-            this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(371, 402);
-            this.dataGridView2.TabIndex = 0;
-            this.dataGridView2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
+            this.dataGridViewMenu.AllowUserToAddRows = false;
+            this.dataGridViewMenu.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewMenu.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewMenu.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewMenu.Name = "dataGridViewMenu";
+            this.dataGridViewMenu.Size = new System.Drawing.Size(371, 402);
+            this.dataGridViewMenu.TabIndex = 0;
+            this.dataGridViewMenu.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
             // 
             // menuStrip2
             // 
@@ -389,8 +389,8 @@ namespace Restaurant
             this.tabControl.ResumeLayout(false);
             this.tabPageAddOrder.ResumeLayout(false);
             this.tabPageAddOrder.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSelectDishes)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMenu)).EndInit();
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -420,10 +420,10 @@ namespace Restaurant
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.DataGridView dataGridViewMenu;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.DataGridView dataGridView3;
+        private System.Windows.Forms.DataGridView dataGridViewSelectDishes;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TextBox textBox3;
