@@ -198,7 +198,7 @@ namespace Restaurant
                                  Select(order => new
                                  {
                                      DishID = order.Field<int>("DishID"),
-                                 });  
+                                 });
 
 
                 foreach (var addingRow in addingRows)
@@ -221,19 +221,44 @@ namespace Restaurant
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        public void AddOrderesDish(Int32 DishID, Int32 OrderId)
+        public void DataGridViewOrders_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            DataRow newAddingRow = dataSet.Tables["OrderedDishes"].NewRow();
+            try
+            {
+                int r = e.RowIndex;
+                string OrderId = dataSet.Tables["Orders"].Rows[r]["Id"].ToString();
 
-            newAddingRow["DishID"] = DishID;
-            newAddingRow["OrderID"] = OrderId;
+                dataTableGridViewOrder.Clear();
 
-            dataSet.Tables["OrderedDishes"].Rows.Add(newAddingRow);
-            sql_DA_OrderedDishes.Update(dataSet, "OrderedDishes");
-            ReloadAddOrders();
+                var addingRows = from Order in dataSet.Tables["Orders"].AsEnumerable()
+                                 join DishInOrder in dataSet.Tables["OrderedDishes"].AsEnumerable()
+                                 on Order["Id"].ToString() equals DishInOrder["OrderId"].ToString()
+                                 join Dish in dataSet.Tables["Menu"].AsEnumerable()
+                                 on DishInOrder["DishId"].ToString() equals Dish["DishId"].ToString()
+                                 where Order["Id"].ToString() == OrderId
+                                 select Dish;
+
+                foreach (var addingRow in addingRows)
+                {
+                    Console.WriteLine($"{addingRow["DishId"]} - {addingRow["DishName"]} ");
+
+                    DataRow row = dataTableGridViewOrder.NewRow();
+
+                    row["DishID"] = addingRow["DishID"];
+                    row["DishName"] = addingRow["DishName"];
+                    row["Price"] = addingRow["Price"];
+                    row["DishWeight"] = addingRow["DishWeight"];
+                    row["Command"] = "Command";
+
+                    dataTableGridViewOrder.Rows.Add(row);
+                }
+                Console.WriteLine("---------------------------------");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-
         public void DataGridViewOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -273,5 +298,4 @@ namespace Restaurant
             }
         }
     }
-
 }

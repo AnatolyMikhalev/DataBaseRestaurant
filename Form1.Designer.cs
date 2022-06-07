@@ -99,6 +99,7 @@ namespace Restaurant
             this.dataGridViewOrders.Name = "dataGridViewOrders";
             this.dataGridViewOrders.Size = new System.Drawing.Size(365, 399);
             this.dataGridViewOrders.TabIndex = 0;
+            this.dataGridViewOrders.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOrders_CellClick);
             this.dataGridViewOrders.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOrders_CellContentClick);
             // 
             // tabPageEmployees

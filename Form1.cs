@@ -90,6 +90,10 @@ namespace Restaurant
         {
             createOrder.DataGridViewOrders_CellContentClick(sender, e);
         }
+        private void dataGridViewOrders_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            createOrder.DataGridViewOrders_CellClick(sender, e);
+        }
         private void dataGridView1_UserAddedRow(object sender, DataGridViewRowEventArgs e)
         {
             employees.UserAddedRow();
