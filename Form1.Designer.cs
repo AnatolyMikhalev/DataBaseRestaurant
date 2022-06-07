@@ -51,8 +51,6 @@ namespace Restaurant
             this.label4 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.dataGridViewSelectDishes = new System.Windows.Forms.DataGridView();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.dataGridViewMenu = new System.Windows.Forms.DataGridView();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -230,8 +228,6 @@ namespace Restaurant
             this.tabPageAddOrder.Controls.Add(this.label4);
             this.tabPageAddOrder.Controls.Add(this.button2);
             this.tabPageAddOrder.Controls.Add(this.dataGridViewSelectDishes);
-            this.tabPageAddOrder.Controls.Add(this.label3);
-            this.tabPageAddOrder.Controls.Add(this.textBox2);
             this.tabPageAddOrder.Controls.Add(this.dataGridViewMenu);
             this.tabPageAddOrder.Location = new System.Drawing.Point(4, 22);
             this.tabPageAddOrder.Name = "tabPageAddOrder";
@@ -292,22 +288,6 @@ namespace Restaurant
             this.dataGridViewSelectDishes.Size = new System.Drawing.Size(409, 201);
             this.dataGridViewSelectDishes.TabIndex = 9;
             this.dataGridViewSelectDishes.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(377, 10);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(42, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Поиск:";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(425, 7);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 7;
             // 
             // dataGridViewMenu
             // 
@@ -421,8 +401,6 @@ namespace Restaurant
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.DataGridView dataGridViewMenu;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.DataGridView dataGridViewSelectDishes;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox4;

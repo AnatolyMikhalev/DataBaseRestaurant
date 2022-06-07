@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
-
+using System.Data.Objects.SqlClient;
 
 namespace Restaurant
 {
     class CreateOrder : DataBase
     {
-        static public SqlCommandBuilder sqlBuilderAddOrder = null;
+        static public SqlCommandBuilder sqlBuilderMenu = null;
         static public SqlCommandBuilder sqlBuilderOrders = null;
+        static public SqlCommandBuilder sqlBuilderOrderedDishes = null;
 
         static public SqlDataAdapter sql_DA_Menu = null;
         static public SqlDataAdapter sql_DA_Orders = null;
@@ -24,17 +25,17 @@ namespace Restaurant
         public DataGridView dataGridViewOrder = null;
         public DataGridView dataGridViewOrders = null;
 
-        public DataTable dataTableGridView3 = null;
+        public DataTable dataTableGridViewSelectDishes = null;
         public DataTable dataTableGridViewOrder = null;
 
         public bool newRowAdding;
 
-        public CreateOrder(ref DataGridView dataGridView2, ref DataGridView dataGridView3, ref DataGridView dataGridViewOrder, ref DataGridView dataGridViewOrders)
+        public CreateOrder(ref DataGridView dataGridViewMenu, ref DataGridView dataGridViewSelectDishes, ref DataGridView dataGridViewOrder, ref DataGridView dataGridViewOrders)
         {
             try
             {
-                this.dataGridViewMenu = dataGridView2;
-                this.dataGridViewSelectDishes = dataGridView3;
+                this.dataGridViewMenu = dataGridViewMenu;
+                this.dataGridViewSelectDishes = dataGridViewSelectDishes;
                 this.dataGridViewOrder = dataGridViewOrder;
                 this.dataGridViewOrders = dataGridViewOrders;
 
@@ -42,16 +43,21 @@ namespace Restaurant
                 sql_DA_Orders = new SqlDataAdapter("SELECT *, 'Complete' AS [Command] FROM Orders", sqlConnection);
                 sql_DA_OrderedDishes = new SqlDataAdapter("SELECT * FROM OrderedDishes", sqlConnection);
 
-                sqlBuilderAddOrder = new SqlCommandBuilder(sql_DA_Menu);
+                sqlBuilderMenu = new SqlCommandBuilder(sql_DA_Menu);
                 sqlBuilderOrders = new SqlCommandBuilder(sql_DA_Orders);
+                sqlBuilderOrderedDishes = new SqlCommandBuilder(sql_DA_OrderedDishes);
 
-                dataTableGridView3 = new DataTable();
+                dataTableGridViewSelectDishes = new DataTable();
                 dataTableGridViewOrder = new DataTable();
 
 
                 sqlBuilderOrders.GetInsertCommand();
                 sqlBuilderOrders.GetUpdateCommand();
                 sqlBuilderOrders.GetDeleteCommand();
+
+                sqlBuilderOrderedDishes.GetInsertCommand();
+                sqlBuilderOrderedDishes.GetUpdateCommand();
+                sqlBuilderOrderedDishes.GetDeleteCommand();
 
                 sql_DA_Menu.Fill(dataSet, "Menu");
                 sql_DA_Orders.Fill(dataSet, "Orders");
@@ -61,7 +67,7 @@ namespace Restaurant
                 this.dataGridViewOrders.DataSource = dataSet.Tables["Orders"];
 
 
-                InitDataTableGridView3();
+                InitDataTableGridViewSelectDishes();
                 InitDataTableGridViewOrder();
                 ReloadAddOrders();
             }
@@ -70,9 +76,9 @@ namespace Restaurant
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void InitDataTableGridView3()
+        private void InitDataTableGridViewSelectDishes()
         {
-            dataTableGridView3 = dataSet.Tables["Menu"].Clone();
+            dataTableGridViewSelectDishes = dataSet.Tables["Menu"].Clone();
         }
         private void InitDataTableGridViewOrder()
         {
@@ -84,12 +90,14 @@ namespace Restaurant
             {
                 dataSet.Tables["Menu"].Clear();
                 dataSet.Tables["Orders"].Clear();
+                dataSet.Tables["OrderedDishes"].Clear();
 
                 sql_DA_Menu.Fill(dataSet, "Menu");
                 sql_DA_Orders.Fill(dataSet, "Orders");
+                sql_DA_OrderedDishes.Fill(dataSet, "OrderedDishes");
 
                 dataGridViewMenu.DataSource = dataSet.Tables["Menu"];
-                dataGridViewSelectDishes.DataSource = dataTableGridView3;
+                dataGridViewSelectDishes.DataSource = dataTableGridViewSelectDishes;
                 dataGridViewOrders.DataSource = dataSet.Tables["Orders"];
                 dataGridViewOrder.DataSource = dataTableGridViewOrder;
 
@@ -120,7 +128,7 @@ namespace Restaurant
                 {
                     int r = e.RowIndex;
 
-                    DataRow row = dataTableGridView3.NewRow();
+                    DataRow row = dataTableGridViewSelectDishes.NewRow();
 
                     row["DishID"] = dataGridViewMenu.Rows[r].Cells["DishID"].Value;
                     row["DishName"] = dataGridViewMenu.Rows[r].Cells["DishName"].Value;
@@ -128,7 +136,7 @@ namespace Restaurant
                     row["DishWeight"] = dataGridViewMenu.Rows[r].Cells["DishWeight"].Value;
                     row["Command"] = "Remove";
 
-                    dataTableGridView3.Rows.Add(row);
+                    dataTableGridViewSelectDishes.Rows.Add(row);
                 }
             }
             catch (Exception ex)
@@ -145,7 +153,7 @@ namespace Restaurant
                     if (MessageBox.Show("Удалить блюдо из заказа?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                             == DialogResult.Yes)
                     {
-                        dataTableGridView3.Rows.RemoveAt(e.RowIndex);          // Удаляем строку из таблицы
+                        dataTableGridViewSelectDishes.Rows.RemoveAt(e.RowIndex);          // Удаляем строку из таблицы
                     }
                 }
             }
@@ -183,21 +191,47 @@ namespace Restaurant
                 dataSet.Tables["Orders"].Rows.Add(newAddingRow);
 
                 sql_DA_Orders.Update(dataSet, "Orders");
-                
+
                 ReloadAddOrders();
 
-                var addingRows = dataTableGridView3.AsEnumerable().
+                var addingRows = dataTableGridViewSelectDishes.AsEnumerable().
                                  Select(order => new
                                  {
                                      DishID = order.Field<int>("DishID"),
-                                     OrderId = Id,
-                                 });   // TODO: Реализовал LINQ Запрос, реализовать добавление результата в таблицу OrderedDishes
+                                 });  
+
+
+                foreach (var addingRow in addingRows)
+                {
+                    DataRow newAddingRow1 = dataSet.Tables["OrderedDishes"].NewRow();
+
+                    newAddingRow1["DishID"] = Convert.ToInt32(addingRow.DishID);
+                    newAddingRow1["OrderID"] = Convert.ToInt32(dataSet.Tables["Orders"].Rows[dataSet.Tables["Orders"].Rows.Count - 1].ItemArray[0]);
+
+                    dataSet.Tables["OrderedDishes"].Rows.Add(newAddingRow1);
+
+                }
+
+                sql_DA_OrderedDishes.Update(dataSet, "OrderedDishes");
+                ReloadAddOrders();
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        public void AddOrderesDish(Int32 DishID, Int32 OrderId)
+        {
+            DataRow newAddingRow = dataSet.Tables["OrderedDishes"].NewRow();
+
+            newAddingRow["DishID"] = DishID;
+            newAddingRow["OrderID"] = OrderId;
+
+            dataSet.Tables["OrderedDishes"].Rows.Add(newAddingRow);
+            sql_DA_OrderedDishes.Update(dataSet, "OrderedDishes");
+            ReloadAddOrders();
         }
 
         public void DataGridViewOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
