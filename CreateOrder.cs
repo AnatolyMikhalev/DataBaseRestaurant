@@ -263,34 +263,18 @@ namespace Restaurant
         {
             try
             {
+                //------------------------ Удаление заказа из Orders
+
                 int r = e.RowIndex;
+                string OrderId = dataSet.Tables["Orders"].Rows[r]["Id"].ToString();
 
-                dataTableGridViewOrder.Clear();
+                dataTableGridViewOrder.Rows.RemoveAt(r);          // Удаляем строку из таблицы
 
+                dataSet.Tables["Orders"].Rows[r].Delete(); // Удаляем строку из DataBase.dataSet
 
+                sql_DA_Orders.Update(dataSet, "Orders"); // Удаляем строку из Базы Данных
 
-                //foreach (DataRow row in dataSet.Tables["OrderedDishes"].Rows)
-                //{
-                //    if (dataSet.Tables["Orders"].Rows[r]["Id"].ToString() == row["OrderId"].ToString())
-                //    {
-                //        var addingRows = from addingRow in dataSet.Tables["Menu"].AsEnumerable()
-                //                         where (int)addingRow["DishId"] == (int)row["DishId"]
-                //                         select addingRow;
-
-                //        foreach (var addingRow in addingRows)
-                //        {
-                //            DataRow newAddingRow = dataTableGridViewOrder.NewRow();
-
-                //            newAddingRow["DishID"] = addingRow["DishID"];
-                //            newAddingRow["DishName"] = addingRow["DishName"];
-                //            newAddingRow["Price"] = addingRow["Price"];
-                //            newAddingRow["DishWeight"] = addingRow["DishWeight"];
-
-                //            dataTableGridViewOrder.Rows.Add(newAddingRow);
-                //        }
-                //    }
-                //}
-
+                ReloadAddOrders();
             }
             catch (Exception ex)
             {
