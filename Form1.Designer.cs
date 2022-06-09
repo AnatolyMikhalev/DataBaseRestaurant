@@ -57,6 +57,8 @@ namespace Restaurant
             this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.tabPageCooks = new System.Windows.Forms.TabPage();
+            this.dataGridViewMenuControl = new System.Windows.Forms.DataGridView();
             this.tabPageOrders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOrder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOrders)).BeginInit();
@@ -69,6 +71,8 @@ namespace Restaurant
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMenu)).BeginInit();
             this.menuStrip2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.tabPageCooks.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMenuControl)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPageOrders
@@ -214,6 +218,7 @@ namespace Restaurant
             this.tabControl.Controls.Add(this.tabPageEmployees);
             this.tabControl.Controls.Add(this.tabPageAddOrder);
             this.tabControl.Controls.Add(this.tabPageOrders);
+            this.tabControl.Controls.Add(this.tabPageCooks);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 24);
             this.tabControl.Name = "tabControl";
@@ -347,6 +352,26 @@ namespace Restaurant
             this.toolStripButton1.Text = "Обновить";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
+            // tabPageCooks
+            // 
+            this.tabPageCooks.Controls.Add(this.dataGridViewMenuControl);
+            this.tabPageCooks.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCooks.Name = "tabPageCooks";
+            this.tabPageCooks.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageCooks.Size = new System.Drawing.Size(792, 410);
+            this.tabPageCooks.TabIndex = 5;
+            this.tabPageCooks.Text = "Меню";
+            this.tabPageCooks.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewMenuControl
+            // 
+            this.dataGridViewMenuControl.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewMenuControl.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewMenuControl.Location = new System.Drawing.Point(8, 6);
+            this.dataGridViewMenuControl.Name = "dataGridViewMenuControl";
+            this.dataGridViewMenuControl.Size = new System.Drawing.Size(365, 399);
+            this.dataGridViewMenuControl.TabIndex = 1;
+            // 
             // Restaurant
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -376,6 +401,8 @@ namespace Restaurant
             this.menuStrip2.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.tabPageCooks.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMenuControl)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -410,6 +437,8 @@ namespace Restaurant
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DataGridView dataGridViewOrders;
         private System.Windows.Forms.DataGridView dataGridViewOrder;
+        private System.Windows.Forms.TabPage tabPageCooks;
+        private System.Windows.Forms.DataGridView dataGridViewMenuControl;
     }
 }
 

@@ -28,8 +28,6 @@ namespace Restaurant
         public DataTable dataTableGridViewSelectDishes = null;
         public DataTable dataTableGridViewOrder = null;
 
-        public bool newRowAdding;
-
         public CreateOrder(ref DataGridView dataGridViewMenu, ref DataGridView dataGridViewSelectDishes, ref DataGridView dataGridViewOrder, ref DataGridView dataGridViewOrders)
         {
             try

@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cooks.cs" />
     <Compile Include="CreateOrder.cs" />
     <Compile Include="DataBase.cs" />
     <Compile Include="Employees.cs" />

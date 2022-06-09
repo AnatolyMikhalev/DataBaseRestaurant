@@ -17,6 +17,7 @@ namespace Restaurant
     {
         private Employees employees = null;
         private CreateOrder createOrder = null;
+        private Cooks cooks = null;
 
 
 
@@ -114,9 +115,9 @@ namespace Restaurant
 
             employees = new Employees(ref dataGridView1, ref newRowAdding);
             createOrder = new CreateOrder(ref dataGridViewMenu, ref dataGridViewSelectDishes, ref dataGridViewOrder, ref dataGridViewOrders);
+            cooks = new Cooks(ref dataGridViewMenuControl);
 
             DataBase.OpenConnection();
-
 
             tabControl.TabPages.Remove(tabPageEmployees);
             tabControl.TabPages.Clear();
@@ -124,6 +125,7 @@ namespace Restaurant
             tabControl.TabPages.Add(tabPageEmployees);
             tabControl.TabPages.Add(tabPageAddOrder);
             tabControl.TabPages.Add(tabPageOrders);
+            tabControl.TabPages.Add(tabPageCooks);
         }
 
     }
