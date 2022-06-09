@@ -19,18 +19,20 @@ namespace Restaurant
 
         public DataTable dataTableGridViewMenuControl = null;
 
+        public bool newRowAdding;
+
         public Cooks(ref DataGridView dataGridViewMenuControl)
         {
             try
             {
                 this.dataGridViewMenuControl = dataGridViewMenuControl;
 
-                sql_DA_MenuControl = new SqlDataAdapter("SELECT *, 'Add' AS [Command] FROM Menu", sqlConnection);
+                sql_DA_MenuControl = new SqlDataAdapter("SELECT *, 'Delete' AS [Command] FROM Menu", sqlConnection);
 
                 sqlBuilderMenuControl = new SqlCommandBuilder(sql_DA_MenuControl);
 
-                dataTableGridViewMenuControl = new DataTable(); 
-                 
+                dataTableGridViewMenuControl = new DataTable();
+
                 sqlBuilderMenuControl.GetInsertCommand();
                 sqlBuilderMenuControl.GetUpdateCommand();
                 sqlBuilderMenuControl.GetDeleteCommand();
@@ -40,8 +42,15 @@ namespace Restaurant
                 this.dataGridViewMenuControl.DataSource = dataSet.Tables["Menu"];
 
                 dataTableGridViewMenuControl = dataSet.Tables["Menu"].Clone();
-                
+
                 ReloadCooks();
+
+                for (int i = 0; i < dataGridViewMenuControl.Rows.Count - 1; i++)
+                {
+                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+
+                    dataGridViewMenuControl[4, i] = linkCell;
+                }
             }
             catch (Exception ex)
             {
@@ -64,12 +73,177 @@ namespace Restaurant
 
                     dataGridViewMenuControl[4, i] = linkCell;
                 }
+
+                //TabFocus();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        public void CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.ColumnIndex == 4)
+                {
+                    string task = dataGridViewMenuControl.Rows[e.RowIndex].Cells[4].Value.ToString();
+
+                    if (task == "Delete")
+                    {
+                        if (MessageBox.Show("Удалить эту строку?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                            == DialogResult.Yes)
+                        {
+                            int rowIndex = e.RowIndex;
+
+                            dataGridViewMenuControl.Rows.RemoveAt(rowIndex);          // Удаляем строку из таблицы
+
+                            dataSet.Tables["Menu"].Rows[rowIndex].Delete(); // Удаляем строку из DataBase.dataSet
+
+                            sql_DA_MenuControl.Update(dataSet, "Menu"); // Удаляем строку из Базы Данных
+                        }
+                    }
+                    else if (task == "Insert")
+                    {
+                        int rowIndex = dataGridViewMenuControl.Rows.Count - 2;
+
+                        DataRow row = dataSet.Tables["Menu"].NewRow();
+
+                        //row["DishId"] = dataGridViewMenuControl.Rows[rowIndex].Cells["DishId"].Value;
+                        row["DishName"] = dataGridViewMenuControl.Rows[rowIndex].Cells["DishName"].Value;
+                        row["Price"] = dataGridViewMenuControl.Rows[rowIndex].Cells["Price"].Value;
+                        row["DishWeight"] = dataGridViewMenuControl.Rows[rowIndex].Cells["DishWeight"].Value;
+
+                        dataSet.Tables["Menu"].Rows.Add(row);
+
+                        dataSet.Tables["Menu"].Rows.RemoveAt(dataSet.Tables["Menu"].Rows.Count - 1);
+
+                        dataGridViewMenuControl.Rows.RemoveAt(dataGridViewMenuControl.Rows.Count - 2);
+
+                        dataGridViewMenuControl.Rows[e.RowIndex].Cells[4].Value = "Delete";
+
+                        sql_DA_MenuControl.Update(dataSet, "Menu");
+
+                        newRowAdding = false;
+
+                    }
+                    else if (task == "Update")
+                    {
+                        int r = e.RowIndex;
+
+                        DataTable table = dataSet.Tables["Menu"];
+
+                        table.Rows[r]["DishId"] = dataGridViewMenuControl.Rows[r].Cells["DishId"].Value;
+                        table.Rows[r]["DishName"] = dataGridViewMenuControl.Rows[r].Cells["DishName"].Value;
+                        table.Rows[r]["Price"] = dataGridViewMenuControl.Rows[r].Cells["Price"].Value;
+                        table.Rows[r]["DishWeight"] = dataGridViewMenuControl.Rows[r].Cells["DishWeight"].Value;
+
+                        MessageBox.Show($"Обновлено строк: {Convert.ToString(sql_DA_MenuControl.Update(dataSet, "Menu"))}", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        sql_DA_MenuControl.Update(table);
+
+                        dataGridViewMenuControl.Rows[e.RowIndex].Cells[4].Value = "Delete";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                newRowAdding = false;
+            }
+
+        }  //TODO: реализовать обработку нажатий ячеек
+
+
+
+        public void SearchDish(String Text, int Index)
+        {
+            switch (Index)
+            {
+                case 0:
+                    (dataGridViewMenuControl.DataSource as DataTable).DefaultView.RowFilter = $"Id LIKE '%{Text}%'";
+                    break;
+                case 1:
+                    (dataGridViewMenuControl.DataSource as DataTable).DefaultView.RowFilter = $"LastName LIKE '%{Text}%'";
+                    break;
+                case 2:
+                    (dataGridViewMenuControl.DataSource as DataTable).DefaultView.RowFilter = $"FirstName LIKE '%{Text}%'";
+                    break;
+                case 3:
+                    (dataGridViewMenuControl.DataSource as DataTable).DefaultView.RowFilter = $"Address LIKE '%{Text}%'";
+                    break;
+                case 4:
+                    (dataGridViewMenuControl.DataSource as DataTable).DefaultView.RowFilter = $"Post LIKE '%{Text}%'";
+                    break;
+                default:
+                    break;
+            }
+        }
+        public void UserAddedRow()
+        {
+            try
+            {
+                if (newRowAdding == false)
+                {
+                    newRowAdding = true;
+
+                    int lastRow = dataGridViewMenuControl.Rows.Count - 2;
+
+                    DataGridViewRow row = dataGridViewMenuControl.Rows[lastRow];
+
+                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+
+                    dataGridViewMenuControl[4, lastRow] = linkCell;
+
+                    row.Cells["Command"].Value = "Insert";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        public void CellValueChanged()
+        {
+            try
+            {
+                if (newRowAdding == false)
+                {
+                    int rowIndex = dataGridViewMenuControl.SelectedCells[0].RowIndex;
+
+                    DataGridViewRow editingRow = dataGridViewMenuControl.Rows[rowIndex];
+
+                    DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+
+                    dataGridViewMenuControl[4, rowIndex] = linkCell;
+
+                    editingRow.Cells["Command"].Value = "Update";
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void TabFocus()
+        {
+            for (int i = 0; i < dataGridViewMenuControl.Rows.Count - 1; i++ )
+            {
+                DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+
+                dataGridViewMenuControl[4, i] = linkCell;
+
+                dataGridViewMenuControl[4, i].Value = "Delete";
+            }
+        }
+
+        //TODO: реализовать удаление блюд из меню
+
+        //TODO: реализовать изменение блюд в меню
+
+        //TODO: реализовать добавление блюд в меню
 
         //public void DataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         //{

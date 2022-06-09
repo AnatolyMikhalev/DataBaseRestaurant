@@ -23,14 +23,6 @@ namespace Restaurant
 
         //private DataBase.sqlConnection DataBase.sqlConnection = null;
 
-        //private SqlCommandBuilder sqlBuilderEmployees = null;
-        private SqlCommandBuilder sqlBuilderMenu = null;
-        private SqlCommandBuilder sqlBuilderOrders = null;
-
-        //private SqlDataAdapter Employees.sqlDataAdapter = null;
-        private SqlDataAdapter sql_DA_AddOrder = null;
-        private SqlDataAdapter sql_DA_Orders = null;
-        private SqlDataAdapter sql_DA_OrderedDishes = null;
 
 
         private DataTable dataTableGridView3 = null;
@@ -78,11 +70,19 @@ namespace Restaurant
             employees.DataGridView1_CellContentClick(e);
             employees.ReloadDataEmployees();
         }  // Employees Insert Update Delete
+        private void dataGridView1_UserAddedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            employees.UserAddedRow();
+        } // Employees adding row
+
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            employees.CellValueChanged();
+        }  // Employees
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             createOrder.DataGridView2_CellContentClick(sender, e);
         }
-
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             createOrder.DataGridView3_CellContentClick(sender, e);
@@ -94,19 +94,22 @@ namespace Restaurant
         private void dataGridViewOrders_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             createOrder.DataGridViewOrders_CellClick(sender, e);
-        }
-        private void dataGridView1_UserAddedRow(object sender, DataGridViewRowEventArgs e)
-        {
-            employees.UserAddedRow();
-        } // Employees adding row
-
-        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            employees.CellValueChanged();
-        }  // Employees changing data
+        } //changing data
         private void button2_Click(object sender, EventArgs e)
         {
             createOrder.Button2_Click(sender, e, textBox3.Text, textBox4.Text);
+        }
+        private void dataGridViewMenuControl_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            cooks.CellContentClick(sender, e);
+        }
+        private void dataGridViewMenuControl_UserAddedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            cooks.UserAddedRow();
+        }
+        private void dataGridViewMenuControl_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            cooks.CellValueChanged();
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -117,9 +120,11 @@ namespace Restaurant
             createOrder = new CreateOrder(ref dataGridViewMenu, ref dataGridViewSelectDishes, ref dataGridViewOrder, ref dataGridViewOrders);
             cooks = new Cooks(ref dataGridViewMenuControl);
 
+            //createOrder.TabFocus();
+            //cooks.TabFocus();
+
             DataBase.OpenConnection();
 
-            tabControl.TabPages.Remove(tabPageEmployees);
             tabControl.TabPages.Clear();
             tabControl.TabPages.Add(tabPageAutorizaion);
             tabControl.TabPages.Add(tabPageEmployees);
@@ -128,5 +133,14 @@ namespace Restaurant
             tabControl.TabPages.Add(tabPageCooks);
         }
 
+        private void dataGridViewMenu_Click(object sender, EventArgs e)
+        {
+            createOrder.TabFocus();
+        }
+
+        private void dataGridViewMenuControl_Click(object sender, EventArgs e)
+        {
+            cooks.TabFocus();
+        }
     }
 }

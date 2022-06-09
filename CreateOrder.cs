@@ -279,5 +279,16 @@ namespace Restaurant
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        public void TabFocus()
+        {
+            for (int i = 0; i < dataGridViewMenu.Rows.Count; i++)
+            {
+                DataGridViewLinkCell linkCell = new DataGridViewLinkCell();
+
+                dataGridViewMenu[4, i] = linkCell;
+
+                dataGridViewMenu[4, i].Value = "Add";
+            }
+        }
     }
 }
